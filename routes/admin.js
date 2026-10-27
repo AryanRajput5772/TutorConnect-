@@ -145,7 +145,7 @@ router.get('/tutors/:id', isAdminAuth, async (req, res) => {
 });
 
 // POST /admin/tutors/:id/send-zoom - Admin sends Zoom link through email
-router.post('/admin/tutors/:id/send-zoom', isAdminAuth, async (req, res) => {
+router.post(['/tutors/:id/send-zoom', '/admin/tutors/:id/send-zoom'], isAdminAuth, async (req, res) => {
   try {
     const tutor = await Tutor.findById(req.params.id);
     if (!tutor) {
@@ -199,7 +199,7 @@ router.post('/admin/tutors/:id/send-zoom', isAdminAuth, async (req, res) => {
 });
 
 // POST /admin/tutors/:id/verify - Admin verifies tutor profile after Zoom interview
-router.post('/admin/tutors/:id/verify', isAdminAuth, async (req, res) => {
+router.post(['/tutors/:id/verify', '/admin/tutors/:id/verify'], isAdminAuth, async (req, res) => {
   try {
     const tutor = await Tutor.findById(req.params.id);
     if (!tutor) {
@@ -237,7 +237,7 @@ router.post('/admin/tutors/:id/verify', isAdminAuth, async (req, res) => {
 });
 
 // POST /admin/tutors/:id/reject - Admin rejects tutor profile
-router.post('/admin/tutors/:id/reject', isAdminAuth, async (req, res) => {
+router.post(['/tutors/:id/reject', '/admin/tutors/:id/reject'], isAdminAuth, async (req, res) => {
   try {
     const tutor = await Tutor.findById(req.params.id);
     if (!tutor) {
@@ -263,7 +263,7 @@ router.post('/admin/tutors/:id/reject', isAdminAuth, async (req, res) => {
 });
 
 // POST /admin/tutors/:id/revert-pending - Revert to pending
-router.post('/admin/tutors/:id/revert-pending', isAdminAuth, async (req, res) => {
+router.post(['/tutors/:id/revert-pending', '/admin/tutors/:id/revert-pending'], isAdminAuth, async (req, res) => {
   try {
     const tutor = await Tutor.findById(req.params.id);
     if (tutor) {
@@ -297,7 +297,7 @@ router.get('/inquiries', isAdminAuth, async (req, res) => {
 });
 
 // POST /admin/inquiries/:id/status - Update Inquiry Status
-router.post('/admin/inquiries/:id/status', isAdminAuth, async (req, res) => {
+router.post(['/inquiries/:id/status', '/admin/inquiries/:id/status'], isAdminAuth, async (req, res) => {
   try {
     const { status } = req.body;
     await Inquiry.findByIdAndUpdate(req.params.id, { status });
