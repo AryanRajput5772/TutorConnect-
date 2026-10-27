@@ -6,21 +6,37 @@ let transporter = null;
 const getTransporter = async () => {
   if (transporter) return transporter;
 
-  // If user provided custom SMTP in .env
-  if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
-    transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: parseInt(process.env.SMTP_PORT, 10) || 587,
-      secure: process.env.SMTP_PORT === '465',
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS
-      }
-    });
-    return transporter;
+  // 1. If user provided custom SMTP in environment variables
+  if (process.env.SMTP_USER && process.env.SMTP_PASS) {
+    const isGmail = (process.env.SMTP_HOST && process.env.SMTP_HOST.includes('gmail')) || 
+                    (process.env.SMTP_USER && process.env.SMTP_USER.includes('@gmail.com'));
+
+    if (isGmail) {
+      transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: process.env.SMTP_USER.trim(),
+          pass: process.env.SMTP_PASS.trim()
+        }
+      });
+      console.log('✅ Connected to Gmail SMTP service for real email delivery');
+      return transporter;
+    } else {
+      transporter = nodemailer.createTransport({
+        host: process.env.SMTP_HOST || 'smtp.gmail.com',
+        port: parseInt(process.env.SMTP_PORT, 10) || 587,
+        secure: process.env.SMTP_PORT === '465',
+        auth: {
+          user: process.env.SMTP_USER.trim(),
+          pass: process.env.SMTP_PASS.trim()
+        }
+      });
+      console.log('✅ Connected to custom SMTP service for real email delivery');
+      return transporter;
+    }
   }
 
-  // Otherwise, fallback to Ethereal / simulated development transporter
+  // 2. Otherwise, fallback to Ethereal / simulated test transporter
   try {
     const testAccount = await nodemailer.createTestAccount();
     transporter = nodemailer.createTransport({
@@ -32,17 +48,15 @@ const getTransporter = async () => {
         pass: testAccount.pass
       }
     });
-    console.log(' Using Ethereal test mailer account for simulated email delivery');
+    console.log('ℹ️ Using Ethereal test mailer account for simulated email delivery');
     return transporter;
   } catch (err) {
-    console.warn('⚠️ Could not create Ethereal account, using console logger mailer fallback:', err.message);
+    console.warn('⚠️ Could not create Ethereal account, using console logger fallback:', err.message);
     transporter = {
       sendMail: async (mailOptions) => {
         console.log('\n--- [SIMULATED EMAIL SENT] ---');
         console.log(`To: ${mailOptions.to}`);
         console.log(`Subject: ${mailOptions.subject}`);
-        console.log(`Text / Body Summary:`);
-        console.log(mailOptions.text || mailOptions.html.substring(0, 300) + '...');
         console.log('------------------------------\n');
         return { messageId: 'simulated-' + Date.now() };
       }
@@ -67,9 +81,10 @@ const sendZoomInterviewEmail = async ({ to, tutorName, zoomLink, meetingId, pass
           hour: '2-digit',
           minute: '2-digit'
         })
-      : 'To be mutually confirmed via phone';
-
-    const fromAddress = process.env.SMTP_FROM || '"TutorConnect Verification Team" <admin@tutorconnect.com>';
+    const defaultFrom = process.env.SMTP_USER 
+      ? `"TutorConnect Verification Team" <${process.env.SMTP_USER}>` 
+      : '"TutorConnect Verification Team" <admin@tutorconnect.com>';
+    const fromAddress = process.env.SMTP_FROM || defaultFrom;
 
     const htmlContent = `
       <!DOCTYPE html>
@@ -171,7 +186,11 @@ const sendZoomInterviewEmail = async ({ to, tutorName, zoomLink, meetingId, pass
 const sendProfileVerifiedEmail = async ({ to, tutorName }) => {
   try {
     const mail = await getTransporter();
-    const fromAddress = process.env.SMTP_FROM || '"TutorConnect Team" <admin@tutorconnect.com>';
+    const defaultFrom = process.env.SMTP_USER 
+      ? `"TutorConnect Team" <${process.env.SMTP_USER}>` 
+      : '"TutorConnect Team" <admin@tutorconnect.com>';
+    const fromAddress = process.env.SMTP_FROM || defaultFrom;
+    const appBaseUrl = process.env.APP_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : `http://localhost:${process.env.PORT || 3000}`);
 
     const htmlContent = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px;">
@@ -179,7 +198,7 @@ const sendProfileVerifiedEmail = async ({ to, tutorName }) => {
         <p>We are delighted to inform you that your interview and credentials have been verified by our academic admin team.</p>
         <p><strong>Your profile is now VERIFIED and LIVE on the TutorConnect homepage!</strong></p>
         <p>Parents searching for home tutors in your preferred locations and subjects can now view your verified badge, profile details, and request tuition / demo sessions with you directly.</p>
-        <p><a href="http://localhost:${process.env.PORT || 3000}/tutors" style="display:inline-block; background-color:#16a34a; color:#fff; padding:10px 20px; text-decoration:none; border-radius:5px; font-weight:bold;">View Live Directory</a></p>
+        <p><a href="${appBaseUrl}/tutors" style="display:inline-block; background-color:#16a34a; color:#fff; padding:10px 20px; text-decoration:none; border-radius:5px; font-weight:bold;">View Live Directory</a></p>
         <p>Best regards,<br>The TutorConnect Team</p>
       </div>
     `;
