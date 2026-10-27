@@ -24,7 +24,14 @@ const seedData = async () => {
       });
       console.log(`✅ Admin account created: ${adminEmail} (password: ${process.env.ADMIN_PASSWORD || 'admin123'})`);
     } else {
-      console.log(`ℹ️ Admin account already exists: ${adminEmail}`);
+      if (process.env.ADMIN_PASSWORD) {
+        existingAdmin.password = process.env.ADMIN_PASSWORD;
+        if (process.env.ADMIN_NAME) existingAdmin.name = process.env.ADMIN_NAME;
+        await existingAdmin.save();
+        console.log(`🔄 Admin account password updated to current environment settings for: ${adminEmail}`);
+      } else {
+        console.log(`ℹ️ Admin account already exists: ${adminEmail}`);
+      }
     }
 
     // 2. Clear previous sample tutors (optional or only seed if none exist)

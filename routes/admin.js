@@ -29,7 +29,15 @@ router.post('/login', redirectIfAdminAuth, async (req, res) => {
       return res.redirect('/admin/login');
     }
 
-    const isMatch = await admin.comparePassword(password);
+    let isMatch = await admin.comparePassword(password);
+    
+    // Auto-sync if ADMIN_PASSWORD environment variable was updated in production (e.g. on Vercel)
+    if (!isMatch && process.env.ADMIN_PASSWORD && password === process.env.ADMIN_PASSWORD) {
+      admin.password = process.env.ADMIN_PASSWORD;
+      await admin.save();
+      isMatch = true;
+    }
+
     if (!isMatch) {
       req.flash('error_msg', 'Invalid admin credentials');
       return res.redirect('/admin/login');
