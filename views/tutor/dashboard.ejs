@@ -1,0 +1,282 @@
+<%- include('../partials/header') %>
+
+<div class="dashboard-wrapper">
+  <div class="container py-4">
+    <!-- Dashboard Top Bar -->
+    <div class="dashboard-header flex-between">
+      <div class="dashboard-welcome">
+        <h1>Welcome, <%= tutor.name %>!</h1>
+        <p>Manage your tutor profile, check your Zoom interview status, and view student inquiries.</p>
+      </div>
+      <div class="dashboard-actions">
+        <% if (tutor.isVerified) { %>
+          <a href="/tutors/<%= tutor._id %>" class="btn btn-outline" target="_blank">
+            👁️ View My Live Public Profile
+          </a>
+        <% } %>
+        <a href="/tutor/logout" class="btn btn-secondary">Logout</a>
+      </div>
+    </div>
+
+    <!-- VERIFICATION STATUS BANNER (CRITICAL WORKFLOW) -->
+    <div class="verification-status-card <%= tutor.verificationStatus %> mt-3">
+      <% if (tutor.verificationStatus === 'pending') { %>
+        <div class="status-icon-col">
+          <span class="status-icon">⏳</span>
+        </div>
+        <div class="status-content-col">
+          <div class="status-badge-inline badge-warning">Step 1: Under Admin Review</div>
+          <h2>Your Profile is Pending Admin Verification</h2>
+          <p>
+            Your application and credentials have been submitted to the <strong>Admin Dashboard</strong>.
+            Our academic verification coordinator will review your profile and email you a <strong>Zoom meeting interview link</strong> shortly.
+          </p>
+          <div class="status-next-steps">
+            <strong>Next Step:</strong> Please check your email (<code><%= tutor.email %></code>) for the Zoom invitation. Once the 15-minute video interview is completed, the admin will activate your profile on the main website front page.
+          </div>
+        </div>
+
+      <% } else if (tutor.verificationStatus === 'interview_scheduled') { %>
+        <div class="status-icon-col">
+          <span class="status-icon">📹</span>
+        </div>
+        <div class="status-content-col">
+          <div class="status-badge-inline badge-info">Step 2: Zoom Interview Scheduled</div>
+          <h2>Your Verification Interview is Scheduled!</h2>
+          <p>
+            The admin has scheduled your video interview and sent the Zoom link to your email (<code><%= tutor.email %></code>).
+          </p>
+
+          <div class="zoom-scheduled-box mt-3">
+            <div class="zoom-box-header">
+              <h3>📅 Zoom Meeting Details</h3>
+            </div>
+            <div class="zoom-box-grid">
+              <div>
+                <strong>Scheduled Date & Time:</strong>
+                <p class="zoom-time-text">
+                  <%= tutor.interviewDetails && tutor.interviewDetails.scheduledAt 
+                      ? new Date(tutor.interviewDetails.scheduledAt).toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }) 
+                      : 'To be confirmed / immediate' %>
+                </p>
+              </div>
+
+              <% if (tutor.interviewDetails && tutor.interviewDetails.meetingId) { %>
+                <div>
+                  <strong>Meeting ID:</strong>
+                  <p><code><%= tutor.interviewDetails.meetingId %></code></p>
+                </div>
+              <% } %>
+
+              <% if (tutor.interviewDetails && tutor.interviewDetails.passcode) { %>
+                <div>
+                  <strong>Passcode:</strong>
+                  <p><code><%= tutor.interviewDetails.passcode %></code></p>
+                </div>
+              <% } %>
+            </div>
+
+            <% if (tutor.interviewDetails && tutor.interviewDetails.notes) { %>
+              <div class="zoom-notes-alert mt-2">
+                <strong>Admin Instructions:</strong> <%= tutor.interviewDetails.notes %>
+              </div>
+            <% } %>
+
+            <div class="zoom-cta-row mt-3">
+              <% if (tutor.interviewDetails && tutor.interviewDetails.zoomLink) { %>
+                <a href="<%= tutor.interviewDetails.zoomLink %>" target="_blank" class="btn btn-zoom btn-lg">
+                  📹 Join Zoom Interview Now &rarr;
+                </a>
+              <% } %>
+              <span class="zoom-prep-hint">Please have your degree certificates ready to show the interviewer.</span>
+            </div>
+          </div>
+        </div>
+
+      <% } else if (tutor.verificationStatus === 'verified') { %>
+        <div class="status-icon-col">
+          <span class="status-icon">🎉</span>
+        </div>
+        <div class="status-content-col">
+          <div class="status-badge-inline badge-success">✓ Fully Verified & Live</div>
+          <h2>Congratulations! Your Profile is Verified & Live on the Homepage</h2>
+          <p>
+            You have passed your Zoom verification interview. Your profile is now displayed to parents seeking home tuition in your preferred localities.
+          </p>
+          <div class="verified-quick-links mt-2">
+            <a href="/tutors/<%= tutor._id %>" class="btn btn-primary" target="_blank">
+              View Your Live Profile &rarr;
+            </a>
+            <a href="/" class="btn btn-outline" target="_blank">
+              Check TutorConnect Homepage
+            </a>
+          </div>
+        </div>
+
+      <% } else if (tutor.verificationStatus === 'rejected') { %>
+        <div class="status-icon-col">
+          <span class="status-icon">❌</span>
+        </div>
+        <div class="status-content-col">
+          <div class="status-badge-inline badge-danger">Application Needs Revision</div>
+          <h2>Application Not Approved</h2>
+          <p>The admin team could not verify your profile at this time.</p>
+          <% if (tutor.adminNotes) { %>
+            <div class="rejection-notes">
+              <strong>Admin Reason:</strong> <%= tutor.adminNotes %>
+            </div>
+          <% } %>
+          <p class="mt-2">You can update your profile details below for re-evaluation.</p>
+        </div>
+      <% } %>
+    </div>
+
+    <!-- PARENT INQUIRIES RECEIVED -->
+    <div class="dashboard-card mt-4">
+      <div class="dashboard-card-header flex-between">
+        <div>
+          <h3>📩 Home Tuition Inquiries from Parents (<%= inquiries.length %>)</h3>
+          <p class="text-muted">Direct requests submitted by parents looking for home tuition with you.</p>
+        </div>
+      </div>
+
+      <% if (inquiries && inquiries.length > 0) { %>
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Parent Name</th>
+                <th>Phone / WhatsApp</th>
+                <th>Student Grade</th>
+                <th>Locality</th>
+                <th>Subjects Needed</th>
+                <th>Preferred Time</th>
+                <th>Parent Note</th>
+                <th>Date Received</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% inquiries.forEach(inq => { %>
+                <tr>
+                  <td><strong><%= inq.parentName %></strong></td>
+                  <td>
+                    <a href="tel:<%= inq.parentPhone %>" class="phone-link">📞 <%= inq.parentPhone %></a>
+                    <% if (inq.parentEmail) { %>
+                      <br><small class="text-muted"><%= inq.parentEmail %></small>
+                    <% } %>
+                  </td>
+                  <td><span class="badge badge-light"><%= inq.studentGrade %></span></td>
+                  <td>📍 <%= inq.locality %></td>
+                  <td><%= inq.subjectsNeeded.join(', ') || 'All Core Subjects' %></td>
+                  <td><%= inq.preferredTiming %></td>
+                  <td><small><%= inq.message || '—' %></small></td>
+                  <td><small><%= new Date(inq.createdAt).toLocaleDateString() %></small></td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      <% } else { %>
+        <div class="empty-inquiries">
+          <p>No parent inquiries received yet. Once your profile is verified and active on the front page, parents in your preferred locality can send you home tuition requests directly.</p>
+        </div>
+      <% } %>
+    </div>
+
+    <!-- PROFILE MANAGEMENT / EDIT FORM -->
+    <div class="dashboard-card mt-4">
+      <div class="dashboard-card-header">
+        <h3>✏️ Edit Your Tutor Profile Details</h3>
+        <p class="text-muted">Keep your subjects, preferred localities, and tuition rates updated.</p>
+      </div>
+
+      <form action="/tutor/profile/update" method="POST" class="profile-edit-form">
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input type="text" name="name" class="form-control" value="<%= tutor.name %>" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Phone Number</label>
+            <input type="text" name="phone" class="form-control" value="<%= tutor.phone %>" required>
+          </div>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label">Highest Qualification</label>
+            <input type="text" name="qualification" class="form-control" value="<%= tutor.qualification %>" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">College / University</label>
+            <input type="text" name="college" class="form-control" value="<%= tutor.college || '' %>">
+          </div>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label">Teaching Experience (Years)</label>
+            <input type="number" name="experienceYears" class="form-control" value="<%= tutor.experienceYears %>" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Primary City</label>
+            <input type="text" name="city" class="form-control" value="<%= tutor.city %>" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Subjects Taught (Comma separated)</label>
+          <input type="text" name="subjects" class="form-control" value="<%= tutor.subjects.join(', ') %>" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Preferred Neighborhoods / Localities for Home Tuition (Comma separated)</label>
+          <input type="text" name="preferredLocations" class="form-control" value="<%= tutor.preferredLocations.join(', ') %>" required>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label">Hourly Fee (₹ / hr)</label>
+            <input type="number" name="hourlyFee" class="form-control" value="<%= tutor.hourlyFee %>" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Monthly Fee (₹ / month)</label>
+            <input type="number" name="monthlyFee" class="form-control" value="<%= tutor.monthlyFee || '' %>">
+          </div>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label">Tuition Mode</label>
+            <select name="teachingMode" class="form-control">
+              <option value="home_tuition" <%= tutor.teachingMode === 'home_tuition' ? 'selected' : '' %>>Home Tuition at Student's Home</option>
+              <option value="both" <%= tutor.teachingMode === 'both' ? 'selected' : '' %>>Both Home Tuition & Online</option>
+              <option value="online" <%= tutor.teachingMode === 'online' ? 'selected' : '' %>>Online Only</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Availability</label>
+            <input type="text" name="availability" class="form-control" value="<%= tutor.availability %>">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Profile Avatar Image URL</label>
+          <input type="url" name="avatar" class="form-control" value="<%= tutor.avatar %>" placeholder="https://example.com/photo.jpg">
+          <small class="form-hint">Enter an image URL for your profile photo or leave default.</small>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Teaching Philosophy / Bio</label>
+          <textarea name="bio" class="form-control" rows="4" required><%= tutor.bio %></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg">
+          Save & Update Profile
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

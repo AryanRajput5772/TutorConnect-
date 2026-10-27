@@ -1,0 +1,161 @@
+<%- include('../partials/header') %>
+
+<div class="auth-page-wrapper">
+  <div class="container auth-container auth-wide">
+    <div class="auth-card">
+      <div class="auth-header">
+        <span class="auth-badge">👨‍🏫 Tutor Application</span>
+        <h2>Apply to Become a Verified Home Tutor</h2>
+        <p>Complete your teaching profile. Our admin team will schedule your Zoom verification interview before publishing your profile to parents.</p>
+      </div>
+
+      <div class="verification-step-indicator">
+        <div class="v-step active">
+          <span class="step-circle">1</span>
+          <span class="step-title">Submit Details</span>
+        </div>
+        <div class="v-step-line"></div>
+        <div class="v-step">
+          <span class="step-circle">2</span>
+          <span class="step-title">Zoom Interview with Admin</span>
+        </div>
+        <div class="v-step-line"></div>
+        <div class="v-step">
+          <span class="step-circle">3</span>
+          <span class="step-title">Verified Badge on Front Page</span>
+        </div>
+      </div>
+
+      <form action="/tutor/register" method="POST" class="auth-form-grid">
+        <!-- Section 1: Basic Information -->
+        <div class="form-section-title">
+          <h4>1. Basic & Account Credentials</h4>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label">Full Name *</label>
+            <input type="text" name="name" class="form-control" required placeholder="e.g. Rahul Sharma" value="<%= typeof formData !== 'undefined' && formData.name ? formData.name : '' %>">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email Address *</label>
+            <input type="email" name="email" class="form-control" required placeholder="rahul@example.com" value="<%= typeof formData !== 'undefined' && formData.email ? formData.email : '' %>">
+          </div>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label">Password * (min 6 characters)</label>
+            <input type="password" name="password" class="form-control" required placeholder="••••••••">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Confirm Password *</label>
+            <input type="password" name="confirmPassword" class="form-control" required placeholder="••••••••">
+          </div>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label">Mobile Number (WhatsApp) *</label>
+            <input type="tel" name="phone" class="form-control" required placeholder="+91 98765 43210" value="<%= typeof formData !== 'undefined' && formData.phone ? formData.phone : '' %>">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Gender</label>
+            <select name="gender" class="form-control">
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Section 2: Qualifications & Experience -->
+        <div class="form-section-title mt-4">
+          <h4>2. Academic Qualifications & Experience</h4>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label">Highest Qualification *</label>
+            <input type="text" name="qualification" class="form-control" required placeholder="e.g. M.Sc. Mathematics, B.Tech Computer Science, M.A. English" value="<%= typeof formData !== 'undefined' && formData.qualification ? formData.qualification : '' %>">
+          </div>
+          <div class="form-group">
+            <label class="form-label">College / University</label>
+            <input type="text" name="college" class="form-control" placeholder="e.g. Delhi University, IIT Delhi" value="<%= typeof formData !== 'undefined' && formData.college ? formData.college : '' %>">
+          </div>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label">Years of Teaching Experience *</label>
+            <input type="number" name="experienceYears" class="form-control" required min="0" placeholder="e.g. 4" value="<%= typeof formData !== 'undefined' && formData.experienceYears ? formData.experienceYears : '3' %>">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Primary City *</label>
+            <input type="text" name="city" class="form-control" required placeholder="e.g. New Delhi, Bengaluru, Mumbai" value="<%= typeof formData !== 'undefined' && formData.city ? formData.city : 'New Delhi' %>">
+          </div>
+        </div>
+
+        <!-- Section 3: Subjects, Preferred Locations & Fees -->
+        <div class="form-section-title mt-4">
+          <h4>3. Tuition Preferences, Preferred Localities & Fees</h4>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Subjects You Teach * (Comma separated)</label>
+          <input type="text" name="subjects" class="form-control" required placeholder="e.g. Mathematics, Physics, Chemistry, Science" value="<%= typeof formData !== 'undefined' && formData.subjects ? formData.subjects : '' %>">
+          <small class="form-hint">Separate multiple subjects with commas.</small>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Preferred Neighborhoods / Localities for Home Tuition * (Comma separated)</label>
+          <input type="text" name="preferredLocations" class="form-control" required placeholder="e.g. South Extension, Lajpat Nagar, Saket, Hauz Khas" value="<%= typeof formData !== 'undefined' && formData.preferredLocations ? formData.preferredLocations : '' %>">
+          <small class="form-hint">Parents in these localities will find your profile when searching for home tuition.</small>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label">Hourly Tuition Fee (₹ / hour) *</label>
+            <input type="number" name="hourlyFee" class="form-control" required placeholder="e.g. 600" value="<%= typeof formData !== 'undefined' && formData.hourlyFee ? formData.hourlyFee : '500' %>">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Approx. Monthly Fee (₹ / month)</label>
+            <input type="number" name="monthlyFee" class="form-control" placeholder="e.g. 6000" value="<%= typeof formData !== 'undefined' && formData.monthlyFee ? formData.monthlyFee : '5000' %>">
+          </div>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label">Tuition Mode</label>
+            <select name="teachingMode" class="form-control">
+              <option value="home_tuition">Home Tuition (At Student's Residence)</option>
+              <option value="both">Both Home Tuition & Online</option>
+              <option value="online">Online Only</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Availability Days & Hours</label>
+            <input type="text" name="availability" class="form-control" placeholder="e.g. Mon-Fri (4 PM - 8 PM), Weekends" value="<%= typeof formData !== 'undefined' && formData.availability ? formData.availability : 'Mon - Sat (Evenings)' %>">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Teaching Philosophy & Bio *</label>
+          <textarea name="bio" class="form-control" rows="4" required placeholder="Describe your teaching approach, past student results, and how you help students build confidence in weak topics."><%= typeof formData !== 'undefined' && formData.bio ? formData.bio : '' %></textarea>
+        </div>
+
+        <div class="auth-submit-row">
+          <button type="submit" class="btn btn-primary btn-lg btn-block">
+            Submit Application & Enter Tutor Portal 🚀
+          </button>
+        </div>
+
+        <div class="auth-footer-text">
+          Already registered? <a href="/tutor/login">Login to your Tutor Portal</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

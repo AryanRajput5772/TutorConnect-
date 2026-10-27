@@ -1,0 +1,313 @@
+<%- include('partials/header') %>
+
+<!-- HERO SECTION -->
+<section class="hero-section">
+  <div class="container hero-container">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="badge-dot"></span> 100% Zoom Interviewed & Verified Home Tutors
+      </div>
+      <h1 class="hero-title">
+        Connect with <span class="text-gradient">Verified Home Tutors</span> for Your Child's Success
+      </h1>
+      <p class="hero-subtitle">
+        We eliminate the guesswork in home tuition. Every teacher is personally interviewed by our academic panel via Zoom, background-vetted, and credential-checked before being listed.
+      </p>
+
+      <!-- Quick Search Form -->
+      <form action="/tutors" method="GET" class="hero-search-box">
+        <div class="search-field">
+          <label>Subject</label>
+          <input type="text" name="subject" placeholder="e.g. Mathematics, Science, English" value="<%= filters.subject || '' %>">
+        </div>
+        <div class="search-divider"></div>
+        <div class="search-field">
+          <label>Preferred Locality / City</label>
+          <input type="text" name="location" placeholder="e.g. South Delhi, Andheri, Koramangala" value="<%= filters.location || '' %>">
+        </div>
+        <div class="search-divider"></div>
+        <div class="search-field">
+          <label>Class / Grade</label>
+          <select name="classGrade">
+            <option value="">All Classes</option>
+            <option value="Class 1-5" <%= filters.classGrade === 'Class 1-5' ? 'selected' : '' %>>Primary (Class 1 - 5)</option>
+            <option value="Class 6-8" <%= filters.classGrade === 'Class 6-8' ? 'selected' : '' %>>Middle (Class 6 - 8)</option>
+            <option value="Class 9-10" <%= filters.classGrade === 'Class 9-10' ? 'selected' : '' %>>High School (Class 9 - 10)</option>
+            <option value="Class 11-12" <%= filters.classGrade === 'Class 11-12' ? 'selected' : '' %>>Senior Secondary (Class 11 - 12)</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary search-submit-btn">
+          <span>Find Tutors</span> 🔍
+        </button>
+      </form>
+
+      <!-- Popular Tags -->
+      <div class="popular-tags">
+        <span class="tags-label">Popular Subjects:</span>
+        <a href="/tutors?subject=Mathematics" class="tag-pill">Mathematics</a>
+        <a href="/tutors?subject=Physics" class="tag-pill">Physics</a>
+        <a href="/tutors?subject=Chemistry" class="tag-pill">Chemistry</a>
+        <a href="/tutors?subject=English" class="tag-pill">English</a>
+        <a href="/tutors?subject=Biology" class="tag-pill">Biology</a>
+        <a href="/tutors?subject=Coding" class="tag-pill">Coding / Python</a>
+      </div>
+    </div>
+
+    <!-- Hero Stats Floating Highlights -->
+    <div class="hero-stats-banner">
+      <div class="stat-card">
+        <div class="stat-number"><%= totalVerifiedCount %>+</div>
+        <div class="stat-label">Verified Home Tutors</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">100%</div>
+        <div class="stat-label">Zoom Interview Screening</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">4.9/5</div>
+        <div class="stat-label">Parent Satisfaction Rating</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW THE VERIFICATION WORKS SECTION -->
+<section class="section verification-explainer-section">
+  <div class="container">
+    <div class="section-header text-center">
+      <span class="section-tag">Quality & Trust Guaranteed</span>
+      <h2 class="section-title">How TutorConnect Verifies Every Teacher</h2>
+      <p class="section-subtitle">We don't allow just anyone to visit your home. Here is our rigorous verification workflow:</p>
+    </div>
+
+    <div class="workflow-grid">
+      <div class="workflow-card">
+        <div class="workflow-number">1</div>
+        <div class="workflow-icon">📝</div>
+        <h3>Tutor Applies & Submits Credentials</h3>
+        <p>Teachers register on TutorConnect and submit their degrees, teaching experience, preferred localities, subjects, and fees.</p>
+      </div>
+
+      <div class="workflow-card highlight-step">
+        <div class="workflow-number">2</div>
+        <div class="workflow-icon">📹</div>
+        <h3>Admin Zoom Interview & Screening</h3>
+        <p>Our academic administrator sends the tutor a Zoom interview meeting link via email to evaluate communication skills, pedagogy, and document verification.</p>
+        <span class="step-badge">Crucial Safety Check</span>
+      </div>
+
+      <div class="workflow-card">
+        <div class="workflow-number">3</div>
+        <div class="workflow-icon">✅</div>
+        <h3>Verified Badge & Live Directory</h3>
+        <p>Only tutors who pass the Zoom interview are marked as <strong>"Verified"</strong> by the admin and listed on this homepage for parents to contact.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VERIFIED TUTORS DIRECTORY SECTION -->
+<section class="section tutors-section" id="tutors">
+  <div class="container">
+    <div class="section-header flex-between">
+      <div>
+        <span class="section-tag">Explore Talent</span>
+        <h2 class="section-title">Verified Home Tutors Available Now</h2>
+        <p class="section-subtitle">Browse screened educators ready for 1-on-1 personalized home tuition.</p>
+      </div>
+      <a href="/tutors" class="btn btn-outline">View All Tutors &rarr;</a>
+    </div>
+
+    <% if (tutors && tutors.length > 0) { %>
+      <div class="tutors-grid">
+        <% tutors.forEach(tutor => { %>
+          <div class="tutor-card">
+            <div class="tutor-card-header">
+              <div class="tutor-avatar-wrapper">
+                <img src="<%= tutor.avatar %>" alt="<%= tutor.name %>" class="tutor-avatar" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400'">
+                <span class="verified-indicator" title="Verified by TutorConnect Admin via Zoom Interview">✓</span>
+              </div>
+              <div class="tutor-header-info">
+                <div class="verified-pill">
+                  <span class="shield-icon">🛡️</span> Verified Tutor
+                </div>
+                <h3 class="tutor-name"><%= tutor.name %></h3>
+                <p class="tutor-qualification"><%= tutor.qualification %></p>
+                <div class="tutor-rating">
+                  <span class="stars">★★★★★</span>
+                  <span class="rating-num"><%= tutor.rating %></span>
+                  <span class="review-count">(<%= tutor.reviewCount %> reviews)</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="tutor-card-body">
+              <p class="tutor-bio-snippet">
+                <%= tutor.bio.length > 110 ? tutor.bio.substring(0, 110) + '...' : tutor.bio %>
+              </p>
+
+              <!-- Subjects -->
+              <div class="tutor-meta-group">
+                <span class="meta-label">Subjects:</span>
+                <div class="tutor-subjects-tags">
+                  <% tutor.subjects.slice(0, 3).forEach(subject => { %>
+                    <span class="subject-tag"><%= subject %></span>
+                  <% }) %>
+                  <% if (tutor.subjects.length > 3) { %>
+                    <span class="subject-tag more">+<%= tutor.subjects.length - 3 %> more</span>
+                  <% } %>
+                </div>
+              </div>
+
+              <!-- Locations -->
+              <div class="tutor-meta-group">
+                <span class="meta-label">Preferred Areas:</span>
+                <div class="locality-chips">
+                  <span class="location-icon">📍</span>
+                  <span class="locality-text">
+                    <%= tutor.preferredLocations && tutor.preferredLocations.length > 0 ? tutor.preferredLocations.slice(0, 2).join(', ') : tutor.city %>
+                    <% if (tutor.preferredLocations && tutor.preferredLocations.length > 2) { %>
+                      <small>+more</small>
+                    <% } %>
+                  </span>
+                </div>
+              </div>
+
+              <!-- Classes & Mode -->
+              <div class="tutor-quick-specs">
+                <div class="spec-item">
+                  <span class="spec-icon">⏱️</span> <%= tutor.experienceYears %>+ Yrs Exp
+                </div>
+                <div class="spec-item">
+                  <span class="spec-icon">🏠</span> Home Tuition
+                </div>
+              </div>
+            </div>
+
+            <div class="tutor-card-footer">
+              <div class="tutor-fee-display">
+                <span class="fee-label">Tuition Fee</span>
+                <span class="fee-amount">₹<%= tutor.hourlyFee %> <small>/ hour</small></span>
+              </div>
+              <a href="/tutors/<%= tutor._id %>" class="btn btn-primary btn-sm">
+                View & Book Demo
+              </a>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <div class="empty-state">
+        <div class="empty-icon">🔍</div>
+        <h3>No Verified Tutors Found</h3>
+        <p>No tutors currently match this search query or all registered tutors are undergoing verification.</p>
+        <a href="/" class="btn btn-outline">Reset Search Filters</a>
+      </div>
+    <% } %>
+  </div>
+</section>
+
+<!-- WHY CHOOSE TUTORCONNECT -->
+<section class="section why-us-section">
+  <div class="container">
+    <div class="section-header text-center">
+      <span class="section-tag">Safe & Personalized</span>
+      <h2 class="section-title">Why Parents Trust TutorConnect</h2>
+      <p class="section-subtitle">We bridge the gap between quality education and student safety.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🛡️</div>
+        <h3>Mandatory Zoom Screening</h3>
+        <p>Admins interview every applicant via Zoom to verify identity, academic certificates, communication skills, and pedagogy.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🏠</div>
+        <h3>Comfort of Home Tuition</h3>
+        <p>Save travel time. Tutors teach 1-on-1 at your doorstep, giving customized attention according to your child's learning pace.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">💰</div>
+        <h3>Transparent Fees & Zero Hidden Costs</h3>
+        <p>Tutors clearly state their hourly or monthly rates upfront. Direct communication without unfair agent markups.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🎁</div>
+        <h3>Risk-Free Demo Class</h3>
+        <p>Schedule a trial session with your selected tutor to assess their chemistry with your child before committing.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEACHER CTA SECTION -->
+<section class="tutor-cta-section">
+  <div class="container">
+    <div class="cta-banner">
+      <div class="cta-content">
+        <h2>Are You a Passionate Educator?</h2>
+        <p>Join TutorConnect today. Submit your teaching credentials, complete your 15-minute Zoom interview with our academic team, and get verified home tuition requests from parents in your preferred locality.</p>
+        <div class="cta-buttons">
+          <a href="/tutor/register" class="btn btn-white btn-lg">Apply as a Home Tutor</a>
+          <a href="/tutor/login" class="btn btn-ghost-white btn-lg">Tutor Login</a>
+        </div>
+      </div>
+      <div class="cta-badge-card">
+        <div class="badge-icon">🏅</div>
+        <h4>Become a Verified Tutor</h4>
+        <p>Earn ₹25,000 - ₹80,000 / month with flexible hours close to your home.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PARENT TESTIMONIALS -->
+<section class="section testimonials-section">
+  <div class="container">
+    <div class="section-header text-center">
+      <span class="section-tag">Real Experiences</span>
+      <h2 class="section-title">What Parents Say About Our Verified Tutors</h2>
+    </div>
+
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">
+          "Finding a trustworthy Mathematics tutor for my daughter in Class 10 was stressful until we found TutorConnect. Knowing the tutor was screened over Zoom gave us peace of mind. Her scores jumped from 68% to 92%!"
+        </p>
+        <div class="testi-author">
+          <strong>Pooja Sharma</strong>
+          <span>Parent of Class 10 Student, South Delhi</span>
+        </div>
+      </div>
+
+      <div class="testimonial-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">
+          "The Zoom verification process is brilliant. Our Physics tutor is a Master's degree holder who explains concepts with practical real-life examples. Highly recommended to all parents!"
+        </p>
+        <div class="testi-author">
+          <strong>Rajesh Iyer</strong>
+          <span>Parent of Class 12 Student, Bengaluru</span>
+        </div>
+      </div>
+
+      <div class="testimonial-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">
+          "Very transparent platform. I could filter tutors by my exact locality and see their hourly fee upfront. The free demo class sealed the deal."
+        </p>
+        <div class="testi-author">
+          <strong>Meenakshi Verma</strong>
+          <span>Parent of Class 7 Student, Mumbai</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,262 @@
+<%- include('partials/header') %>
+
+<div class="tutor-profile-header-bg">
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="/">Home</a> <span>/</span> <a href="/tutors">Verified Tutors</a> <span>/</span> <span><%= tutor.name %></span>
+    </div>
+
+    <div class="profile-hero-card">
+      <div class="profile-hero-avatar-col">
+        <div class="profile-avatar-container">
+          <img src="<%= tutor.avatar %>" alt="<%= tutor.name %>" class="profile-main-avatar" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400'">
+          <span class="profile-verified-badge" title="Zoom Interviewed & Verified by TutorConnect Admin">✓ Verified</span>
+        </div>
+      </div>
+
+      <div class="profile-hero-info-col">
+        <div class="profile-trust-pills">
+          <span class="trust-pill green">
+            <span class="icon">🛡️</span> Verified by Admin (Zoom Interview Passed)
+          </span>
+          <span class="trust-pill blue">
+            <span class="icon">🏠</span> Available for Home Tuition
+          </span>
+        </div>
+
+        <h1 class="profile-tutor-name"><%= tutor.name %></h1>
+        <p class="profile-tutor-degree"><%= tutor.qualification %> <%= tutor.college ? ' • ' + tutor.college : '' %></p>
+
+        <div class="profile-rating-row">
+          <span class="stars">★★★★★</span>
+          <span class="rating-value"><%= tutor.rating %></span>
+          <span class="reviews-count">(<%= tutor.reviewCount %> Parent Reviews)</span>
+          <span class="bullet">•</span>
+          <span class="exp-badge">🏆 <%= tutor.experienceYears %>+ Years Teaching Experience</span>
+        </div>
+
+        <div class="profile-locality-row">
+          <span class="loc-icon">📍</span>
+          <strong>Tuition Locations Covered:</strong>
+          <span><%= tutor.preferredLocations && tutor.preferredLocations.length > 0 ? tutor.preferredLocations.join(', ') : tutor.city %> (<%= tutor.city %>)</span>
+        </div>
+      </div>
+
+      <div class="profile-hero-pricing-col">
+        <div class="pricing-card-box">
+          <div class="pricing-rate">
+            <span class="rate-amount">₹<%= tutor.hourlyFee %></span>
+            <span class="rate-period">/ hour</span>
+          </div>
+          <% if (tutor.monthlyFee) { %>
+            <div class="pricing-monthly">
+              Approx. ₹<%= tutor.monthlyFee %> / month (12 sessions)
+            </div>
+          <% } %>
+          <a href="#inquiryForm" class="btn btn-primary btn-block btn-lg">
+            Request Demo Class 🚀
+          </a>
+          <p class="pricing-guarantee">✨ 100% Risk-Free 1st Demo Class</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container py-4">
+  <div class="profile-layout-grid">
+    <!-- Left Column: Detailed Qualifications & Bio -->
+    <div class="profile-main-details">
+      <!-- About Section -->
+      <div class="detail-box">
+        <h2 class="box-title">About the Tutor & Teaching Methodology</h2>
+        <div class="box-body">
+          <p class="bio-text"><%= tutor.bio %></p>
+        </div>
+      </div>
+
+      <!-- Subjects & Target Classes -->
+      <div class="detail-box">
+        <h2 class="box-title">Subjects & Target Classes</h2>
+        <div class="box-body">
+          <div class="detail-subsection">
+            <h4>Subjects Taught:</h4>
+            <div class="subject-tags-large">
+              <% tutor.subjects.forEach(subject => { %>
+                <span class="tag-pill-large"><%= subject %></span>
+              <% }) %>
+            </div>
+          </div>
+
+          <div class="detail-subsection mt-3">
+            <h4>Classes / Grades Covered:</h4>
+            <div class="class-tags">
+              <% (tutor.classes || ['Class 6-8', 'Class 9-10']).forEach(cls => { %>
+                <span class="class-tag"><%= cls %></span>
+              <% }) %>
+            </div>
+          </div>
+
+          <div class="detail-subsection mt-3">
+            <h4>Boards Covered:</h4>
+            <div class="class-tags">
+              <% (tutor.boards || ['CBSE', 'ICSE']).forEach(board => { %>
+                <span class="board-tag"><%= board %></span>
+              <% }) %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Qualifications & Credentials -->
+      <div class="detail-box">
+        <h2 class="box-title">Academic Background & Credentials</h2>
+        <div class="box-body">
+          <div class="credential-item">
+            <div class="cred-icon">🎓</div>
+            <div class="cred-info">
+              <strong>Highest Degree:</strong> <%= tutor.qualification %>
+              <% if (tutor.college) { %>
+                <p class="cred-sub"><%= tutor.college %></p>
+              <% } %>
+            </div>
+          </div>
+
+          <div class="credential-item">
+            <div class="cred-icon">⏱️</div>
+            <div class="cred-info">
+              <strong>Experience:</strong> <%= tutor.experienceYears %> years of professional home and coaching tuition
+            </div>
+          </div>
+
+          <div class="credential-item">
+            <div class="cred-icon">📅</div>
+            <div class="cred-info">
+              <strong>Weekly Availability:</strong> <%= tutor.availability %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trust & Verification Guarantee Banner -->
+      <div class="verification-badge-box">
+        <div class="v-icon">🛡️</div>
+        <div class="v-text">
+          <h3>TutorConnect Verified Shield</h3>
+          <p>This tutor's identity, college degrees, and teaching capability were evaluated in a one-on-one Zoom interview by our academic administrator before activation.</p>
+          <% if (tutor.verifiedAt) { %>
+            <small class="v-date">Verified on: <%= new Date(tutor.verifiedAt).toLocaleDateString() %></small>
+          <% } %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Parent Demo / Inquiry Form -->
+    <div class="profile-inquiry-sidebar" id="inquiryForm">
+      <div class="inquiry-form-card">
+        <div class="inquiry-card-header">
+          <h3>Book a Free Demo Class</h3>
+          <p>Connect directly with <strong><%= tutor.name %></strong> for home tuition of your child.</p>
+        </div>
+
+        <form action="/tutors/<%= tutor._id %>/inquire" method="POST" class="inquiry-form">
+          <div class="form-group">
+            <label class="form-label">Parent / Guardian Full Name *</label>
+            <input type="text" name="parentName" class="form-control" required placeholder="e.g. Neha Gupta">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Contact Phone Number (WhatsApp) *</label>
+            <input type="tel" name="parentPhone" class="form-control" required placeholder="e.g. +91 98765 43210">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Email Address (Optional)</label>
+            <input type="email" name="parentEmail" class="form-control" placeholder="parent@gmail.com">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Student Class / Grade *</label>
+            <select name="studentGrade" class="form-control" required>
+              <option value="">Select Class</option>
+              <option value="Class 1-5">Class 1 to 5</option>
+              <option value="Class 6">Class 6</option>
+              <option value="Class 7">Class 7</option>
+              <option value="Class 8">Class 8</option>
+              <option value="Class 9">Class 9</option>
+              <option value="Class 10">Class 10</option>
+              <option value="Class 11">Class 11</option>
+              <option value="Class 12">Class 12</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Your Residential Locality *</label>
+            <input type="text" name="locality" class="form-control" required placeholder="e.g. Sector 14, Saket, Koramangala">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Subjects Needed *</label>
+            <input type="text" name="subjectsNeeded" class="form-control" required placeholder="e.g. Mathematics, Science" value="<%= tutor.subjects && tutor.subjects.length > 0 ? tutor.subjects[0] : '' %>">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Preferred Timing</label>
+            <select name="preferredTiming" class="form-control">
+              <option value="Afternoon (3 PM - 5 PM)">Afternoon (3 PM - 5 PM)</option>
+              <option value="Evening (5 PM - 8 PM)" selected>Evening (5 PM - 8 PM)</option>
+              <option value="Morning (7 AM - 9 AM)">Morning (7 AM - 9 AM)</option>
+              <option value="Weekend Only">Weekend Only</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Any specific request / child's weak areas?</label>
+            <textarea name="message" class="form-control" rows="3" placeholder="e.g. Needs help preparing for upcoming board exams and algebra fundamentals."></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block btn-lg">
+            Submit Tuition Request 🚀
+          </button>
+          <p class="form-privacy-note">🔒 Your contact details are secure and only shared with verified teacher <%= tutor.name %>.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Similar Verified Tutors -->
+  <% if (typeof similarTutors !== 'undefined' && similarTutors && similarTutors.length > 0) { %>
+    <div class="similar-tutors-section mt-5">
+      <h3 class="section-title-sm">Other Verified Tutors You Might Consider</h3>
+      <div class="tutors-grid mt-3">
+        <% similarTutors.forEach(sim => { %>
+          <div class="tutor-card">
+            <div class="tutor-card-header">
+              <div class="tutor-avatar-wrapper">
+                <img src="<%= sim.avatar %>" alt="<%= sim.name %>" class="tutor-avatar" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400'">
+                <span class="verified-indicator">✓</span>
+              </div>
+              <div class="tutor-header-info">
+                <div class="verified-pill">🛡️ Verified</div>
+                <h3 class="tutor-name"><%= sim.name %></h3>
+                <p class="tutor-qualification"><%= sim.qualification %></p>
+                <div class="tutor-rating">
+                  <span class="stars">★★★★★</span>
+                  <span class="rating-num"><%= sim.rating %></span>
+                </div>
+              </div>
+            </div>
+            <div class="tutor-card-footer">
+              <div class="tutor-fee-display">
+                <span class="fee-amount">₹<%= sim.hourlyFee %>/hr</span>
+              </div>
+              <a href="/tutors/<%= sim._id %>" class="btn btn-outline btn-sm">View Profile</a>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    </div>
+  <% } %>
+</div>
+
+<%- include('partials/footer') %>

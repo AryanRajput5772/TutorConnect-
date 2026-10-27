@@ -1,0 +1,322 @@
+<%- include('../partials/header') %>
+
+<div class="admin-dashboard-wrapper">
+  <div class="container py-4">
+    <!-- Admin Header -->
+    <div class="admin-header flex-between">
+      <div>
+        <div class="admin-badge-role">🛡️ Administrator Portal</div>
+        <h1>Tutor Verification & Quality Dashboard</h1>
+        <p class="text-muted">Review incoming tutor applications, send Zoom meeting interview invitations, and verify profiles for the front page.</p>
+      </div>
+      <div class="admin-top-actions">
+        <a href="/" class="btn btn-outline" target="_blank">👁️ View Public Website</a>
+        <a href="/admin/inquiries" class="btn btn-outline">📩 Parent Inquiries (<%= metrics.totalInquiries %>)</a>
+        <a href="/admin/logout" class="btn btn-secondary">Logout (<%= admin.name %>)</a>
+      </div>
+    </div>
+
+    <!-- METRICS CARDS -->
+    <div class="admin-metrics-grid mt-4">
+      <div class="metric-card metric-total">
+        <div class="metric-icon">👥</div>
+        <div class="metric-details">
+          <span class="metric-val"><%= metrics.totalTutors %></span>
+          <span class="metric-title">Total Tutors</span>
+        </div>
+      </div>
+
+      <a href="/admin/dashboard?status=pending" class="metric-card metric-pending <%= currentStatus === 'pending' ? 'active-metric' : '' %>">
+        <div class="metric-icon">⏳</div>
+        <div class="metric-details">
+          <span class="metric-val"><%= metrics.pendingCount %></span>
+          <span class="metric-title">Pending Review (Action Needed)</span>
+        </div>
+      </a>
+
+      <a href="/admin/dashboard?status=interview_scheduled" class="metric-card metric-scheduled <%= currentStatus === 'interview_scheduled' ? 'active-metric' : '' %>">
+        <div class="metric-icon">📹</div>
+        <div class="metric-details">
+          <span class="metric-val"><%= metrics.scheduledCount %></span>
+          <span class="metric-title">Interview Scheduled</span>
+        </div>
+      </a>
+
+      <a href="/admin/dashboard?status=verified" class="metric-card metric-verified <%= currentStatus === 'verified' ? 'active-metric' : '' %>">
+        <div class="metric-icon">✅</div>
+        <div class="metric-details">
+          <span class="metric-val"><%= metrics.verifiedCount %></span>
+          <span class="metric-title">Verified & Live on Front Page</span>
+        </div>
+      </a>
+    </div>
+
+    <!-- FILTER & SEARCH BAR -->
+    <div class="admin-filter-bar mt-4 flex-between">
+      <div class="admin-tabs">
+        <a href="/admin/dashboard?status=all" class="admin-tab <%= currentStatus === 'all' ? 'active' : '' %>">
+          All Tutors (<%= metrics.totalTutors %>)
+        </a>
+        <a href="/admin/dashboard?status=pending" class="admin-tab <%= currentStatus === 'pending' ? 'active' : '' %>">
+          Pending Review (<%= metrics.pendingCount %>)
+        </a>
+        <a href="/admin/dashboard?status=interview_scheduled" class="admin-tab <%= currentStatus === 'interview_scheduled' ? 'active' : '' %>">
+          Interview Scheduled (<%= metrics.scheduledCount %>)
+        </a>
+        <a href="/admin/dashboard?status=verified" class="admin-tab <%= currentStatus === 'verified' ? 'active' : '' %>">
+          Verified (<%= metrics.verifiedCount %>)
+        </a>
+        <a href="/admin/dashboard?status=rejected" class="admin-tab <%= currentStatus === 'rejected' ? 'active' : '' %>">
+          Rejected (<%= metrics.rejectedCount %>)
+        </a>
+      </div>
+
+      <form action="/admin/dashboard" method="GET" class="admin-search-form">
+        <input type="hidden" name="status" value="<%= currentStatus %>">
+        <input type="text" name="search" class="form-control" placeholder="Search by name, email, city..." value="<%= search %>">
+        <button type="submit" class="btn btn-secondary btn-sm">Search</button>
+        <% if (search) { %>
+          <a href="/admin/dashboard?status=<%= currentStatus %>" class="btn btn-ghost btn-sm">Clear</a>
+        <% } %>
+      </form>
+    </div>
+
+    <!-- TUTORS MANAGEMENT TABLE -->
+    <div class="dashboard-card mt-3">
+      <div class="dashboard-card-header flex-between">
+        <div>
+          <h3>
+            <% if (currentStatus === 'pending') { %>
+              ⏳ Tutors Awaiting Zoom Interview & Verification
+            <% } else if (currentStatus === 'interview_scheduled') { %>
+              📹 Tutors with Zoom Interview Scheduled
+            <% } else if (currentStatus === 'verified') { %>
+              ✅ Verified Tutors (Currently Live on Front Page)
+            <% } else { %>
+              📋 Tutor Applications & Verification Queue
+            <% } %>
+          </h3>
+          <p class="text-muted">Click "Send Zoom Link" to email interview details. After the Zoom call, click "Verify" to publish their profile.</p>
+        </div>
+      </div>
+
+      <% if (tutors && tutors.length > 0) { %>
+        <div class="table-responsive">
+          <table class="data-table admin-table">
+            <thead>
+              <tr>
+                <th>Tutor Details</th>
+                <th>Academic Qualifications</th>
+                <th>Subjects & Localities</th>
+                <th>Fee (₹)</th>
+                <th>Verification Status</th>
+                <th style="min-width: 250px;">Admin Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% tutors.forEach(tutor => { %>
+                <tr class="tutor-row-<%= tutor.verificationStatus %>">
+                  <!-- Tutor Col -->
+                  <td>
+                    <div class="admin-tutor-cell">
+                      <img src="<%= tutor.avatar %>" alt="<%= tutor.name %>" class="admin-table-avatar" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400'">
+                      <div>
+                        <strong><%= tutor.name %></strong>
+                        <div class="cell-sub"><%= tutor.email %></div>
+                        <div class="cell-sub">📞 <%= tutor.phone %></div>
+                        <small class="text-muted">Applied: <%= new Date(tutor.createdAt).toLocaleDateString() %></small>
+                      </div>
+                    </div>
+                  </td>
+
+                  <!-- Qualifications Col -->
+                  <td>
+                    <strong><%= tutor.qualification %></strong>
+                    <% if (tutor.college) { %>
+                      <div class="cell-sub"><%= tutor.college %></div>
+                    <% } %>
+                    <div class="cell-badge">🏆 <%= tutor.experienceYears %> Yrs Exp</div>
+                  </td>
+
+                  <!-- Subjects & Localities Col -->
+                  <td>
+                    <div class="admin-subjects-list">
+                      <strong>Subjects:</strong> <%= tutor.subjects.join(', ') || 'N/A' %>
+                    </div>
+                    <div class="admin-localities-list mt-1">
+                      <span class="loc-pin">📍</span> <%= tutor.preferredLocations && tutor.preferredLocations.length > 0 ? tutor.preferredLocations.join(', ') : tutor.city %>
+                    </div>
+                    <small class="text-muted">Mode: <%= tutor.teachingMode %></small>
+                  </td>
+
+                  <!-- Fees Col -->
+                  <td>
+                    <div class="admin-fee-badge">
+                      <strong>₹<%= tutor.hourlyFee %></strong>/hr
+                    </div>
+                    <% if (tutor.monthlyFee) { %>
+                      <small class="text-muted">₹<%= tutor.monthlyFee %>/mo</small>
+                    <% } %>
+                  </td>
+
+                  <!-- Status Col -->
+                  <td>
+                    <% if (tutor.verificationStatus === 'pending') { %>
+                      <span class="status-tag status-pending">⏳ Pending Review</span>
+                    <% } else if (tutor.verificationStatus === 'interview_scheduled') { %>
+                      <span class="status-tag status-scheduled">📹 Interview Scheduled</span>
+                      <% if (tutor.interviewDetails && tutor.interviewDetails.scheduledAt) { %>
+                        <div class="small-interview-time">
+                          <%= new Date(tutor.interviewDetails.scheduledAt).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) %>
+                        </div>
+                      <% } %>
+                    <% } else if (tutor.verificationStatus === 'verified') { %>
+                      <span class="status-tag status-verified">✓ Verified (Live)</span>
+                      <% if (tutor.verifiedAt) { %>
+                        <div class="small-interview-time">On: <%= new Date(tutor.verifiedAt).toLocaleDateString() %></div>
+                      <% } %>
+                    <% } else if (tutor.verificationStatus === 'rejected') { %>
+                      <span class="status-tag status-rejected">❌ Rejected</span>
+                    <% } %>
+                  </td>
+
+                  <!-- Actions Col -->
+                  <td>
+                    <div class="action-buttons-group">
+                      <!-- 1. Send Zoom Link Button (Triggers Modal) -->
+                      <button 
+                        type="button" 
+                        class="btn btn-zoom-sm btn-sm open-zoom-modal-btn" 
+                        data-tutor-id="<%= tutor._id %>"
+                        data-tutor-name="<%= tutor.name %>"
+                        data-tutor-email="<%= tutor.email %>"
+                        data-current-zoom="<%= tutor.interviewDetails && tutor.interviewDetails.zoomLink ? tutor.interviewDetails.zoomLink : '' %>"
+                        title="Send Zoom Meeting link to tutor's email">
+                        📹 <%= tutor.verificationStatus === 'interview_scheduled' ? 'Resend Zoom Link' : 'Send Zoom Link' %>
+                      </button>
+
+                      <!-- 2. Verify Tutor Button -->
+                      <% if (!tutor.isVerified) { %>
+                        <form action="/admin/tutors/<%= tutor._id %>/verify" method="POST" style="display:inline;" onsubmit="return confirm('Confirm that you have completed the Zoom interview with <%= tutor.name %> and verified their qualifications? Their profile will be published on the front page immediately.');">
+                          <button type="submit" class="btn btn-success-sm btn-sm" title="Mark as Verified after Zoom interview">
+                            ✅ Verify & Publish
+                          </button>
+                        </form>
+                      <% } else { %>
+                        <span class="badge-live-indicator" title="Profile is Live on Homepage">🌐 Live on Front Page</span>
+                      <% } %>
+
+                      <!-- 3. Details Button -->
+                      <a href="/admin/tutors/<%= tutor._id %>" class="btn btn-outline btn-sm" title="View Full Application Details">
+                        👁️ View Details
+                      </a>
+
+                      <!-- 4. Reject / Revert Dropdown / Button -->
+                      <% if (tutor.verificationStatus !== 'rejected') { %>
+                        <form action="/admin/tutors/<%= tutor._id %>/reject" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to reject this tutor?');">
+                          <button type="submit" class="btn btn-ghost-danger btn-sm" title="Reject Application">
+                            ✕
+                          </button>
+                        </form>
+                      <% } else { %>
+                        <form action="/admin/tutors/<%= tutor._id %>/revert-pending" method="POST" style="display:inline;">
+                          <button type="submit" class="btn btn-outline btn-sm">
+                            Revert to Pending
+                          </button>
+                        </form>
+                      <% } %>
+                    </div>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      <% } else { %>
+        <div class="empty-state">
+          <div class="empty-icon">📂</div>
+          <h3>No tutors found in this view</h3>
+          <p>There are no tutor applications matching your selected status filter.</p>
+          <a href="/admin/dashboard?status=all" class="btn btn-outline">View All Tutors</a>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================== -->
+<!-- INTERACTIVE ZOOM MEETING MODAL                 -->
+<!-- ============================================== -->
+<div class="modal-overlay" id="zoomModal" style="display: none;">
+  <div class="modal-dialog">
+    <div class="modal-header">
+      <div class="modal-title-wrap">
+        <span class="modal-icon">📹</span>
+        <div>
+          <h3 id="modalTutorTitle">Send Zoom Interview Invitation</h3>
+          <p class="modal-subtitle">An automated invitation email will be dispatched to the tutor.</p>
+        </div>
+      </div>
+      <button type="button" class="modal-close" id="closeZoomModal">&times;</button>
+    </div>
+
+    <form id="zoomForm" method="POST" action="">
+      <div class="modal-body">
+        <div class="modal-tutor-badge">
+          Recipient: <strong id="modalTutorName">Tutor Name</strong> (<span id="modalTutorEmail">email@example.com</span>)
+        </div>
+
+        <div class="form-group mt-3">
+          <label class="form-label">Zoom Meeting Link *</label>
+          <input 
+            type="url" 
+            name="zoomLink" 
+            id="modalZoomLinkInput" 
+            class="form-control" 
+            required 
+            placeholder="https://us02web.zoom.us/j/1234567890?pwd=xyz">
+          <small class="form-hint">Paste your personal Zoom room or scheduled meeting URL.</small>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Interview Date & Time *</label>
+          <input 
+            type="datetime-local" 
+            name="scheduledAt" 
+            id="modalScheduledAt" 
+            class="form-control" 
+            required>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label">Meeting ID (Optional)</label>
+            <input type="text" name="meetingId" class="form-control" placeholder="e.g. 892 1234 5678">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Passcode (Optional)</label>
+            <input type="text" name="passcode" class="form-control" placeholder="e.g. 482910">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Special Notes / Documents Required for Interview</label>
+          <textarea 
+            name="notes" 
+            class="form-control" 
+            rows="3" 
+            placeholder="e.g. Please keep your original degree certificates, identity proof, and be ready to explain your teaching approach for Class 9-10 Mathematics.">Please keep your academic degree certificates and ID proof ready for video screening.</textarea>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="cancelZoomModal">Cancel</button>
+        <button type="submit" class="btn btn-zoom">
+          🚀 Send Zoom Link via Email &rarr;
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

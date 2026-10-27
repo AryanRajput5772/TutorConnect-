@@ -1,0 +1,146 @@
+<%- include('../partials/header') %>
+
+<div class="container py-4">
+  <div class="breadcrumb">
+    <a href="/admin/dashboard">&larr; Back to Admin Dashboard</a> <span>/</span> <span>Review Application: <%= tutor.name %></span>
+  </div>
+
+  <div class="admin-detail-layout mt-3">
+    <!-- Left Column: Tutor Profile Inspection -->
+    <div class="admin-detail-main">
+      <div class="detail-box">
+        <div class="admin-profile-head">
+          <img src="<%= tutor.avatar %>" alt="<%= tutor.name %>" class="admin-large-avatar" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400'">
+          <div>
+            <div class="status-pill status-<%= tutor.verificationStatus %>">
+              Status: <%= tutor.verificationStatus.toUpperCase() %>
+            </div>
+            <h2><%= tutor.name %></h2>
+            <p class="text-muted"><%= tutor.qualification %> <%= tutor.college ? '• ' + tutor.college : '' %></p>
+            <div class="quick-contact-row mt-2">
+              <span>📧 <a href="mailto:<%= tutor.email %>"><%= tutor.email %></a></span>
+              <span>📞 <a href="tel:<%= tutor.phone %>"><%= tutor.phone %></a></span>
+              <span>📍 <%= tutor.city %></span>
+            </div>
+          </div>
+        </div>
+
+        <hr class="divider">
+
+        <div class="info-section">
+          <h4>Academic & Teaching Details</h4>
+          <div class="info-grid-2">
+            <div><strong>Highest Degree:</strong> <%= tutor.qualification %></div>
+            <div><strong>College / University:</strong> <%= tutor.college || 'Not specified' %></div>
+            <div><strong>Experience:</strong> <%= tutor.experienceYears %> Years</div>
+            <div><strong>Teaching Mode:</strong> <%= tutor.teachingMode %></div>
+            <div><strong>Hourly Fee:</strong> ₹<%= tutor.hourlyFee %> / hr</div>
+            <div><strong>Monthly Fee:</strong> ₹<%= tutor.monthlyFee || (tutor.hourlyFee * 12) %> / mo</div>
+            <div><strong>Availability:</strong> <%= tutor.availability %></div>
+            <div><strong>Application Date:</strong> <%= new Date(tutor.createdAt).toLocaleString() %></div>
+          </div>
+        </div>
+
+        <div class="info-section mt-4">
+          <h4>Subjects Taught</h4>
+          <div class="subject-tags-large">
+            <% tutor.subjects.forEach(subject => { %>
+              <span class="tag-pill-large"><%= subject %></span>
+            <% }) %>
+          </div>
+        </div>
+
+        <div class="info-section mt-4">
+          <h4>Preferred Localities for Home Tuition</h4>
+          <div class="locality-chips">
+            <span class="loc-pin">📍</span>
+            <span><%= tutor.preferredLocations && tutor.preferredLocations.length > 0 ? tutor.preferredLocations.join(', ') : tutor.city %></span>
+          </div>
+        </div>
+
+        <div class="info-section mt-4">
+          <h4>Teaching Philosophy & Bio</h4>
+          <p class="bio-text"><%= tutor.bio %></p>
+        </div>
+
+        <% if (tutor.interviewDetails && tutor.interviewDetails.zoomLink) { %>
+          <div class="info-section mt-4 zoom-log-card">
+            <h4>📹 Existing Zoom Interview Schedule</h4>
+            <p><strong>Zoom Link:</strong> <a href="<%= tutor.interviewDetails.zoomLink %>" target="_blank"><%= tutor.interviewDetails.zoomLink %></a></p>
+            <p><strong>Scheduled At:</strong> <%= tutor.interviewDetails.scheduledAt ? new Date(tutor.interviewDetails.scheduledAt).toLocaleString() : 'N/A' %></p>
+            <% if (tutor.interviewDetails.meetingId) { %><p><strong>Meeting ID:</strong> <%= tutor.interviewDetails.meetingId %></p><% } %>
+            <% if (tutor.interviewDetails.passcode) { %><p><strong>Passcode:</strong> <%= tutor.interviewDetails.passcode %></p><% } %>
+            <% if (tutor.interviewDetails.sentAt) { %><p class="text-muted"><small>Email sent on: <%= new Date(tutor.interviewDetails.sentAt).toLocaleString() %></small></p><% } %>
+          </div>
+        <% } %>
+      </div>
+    </div>
+
+    <!-- Right Column: Verification & Zoom Action Forms -->
+    <div class="admin-detail-actions">
+      <!-- 1. Send Zoom Link Box -->
+      <div class="action-card mb-4">
+        <h3>📹 Step 1: Send Zoom Interview Link</h3>
+        <p class="text-muted">Send an automated email to <%= tutor.name %> with the Zoom room link & schedule.</p>
+
+        <form action="/admin/tutors/<%= tutor._id %>/send-zoom" method="POST" class="mt-3">
+          <div class="form-group">
+            <label class="form-label">Zoom Link *</label>
+            <input type="url" name="zoomLink" class="form-control" required placeholder="https://zoom.us/j/1234567890?pwd=xyz" value="<%= tutor.interviewDetails && tutor.interviewDetails.zoomLink ? tutor.interviewDetails.zoomLink : '' %>">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Interview Date & Time *</label>
+            <input type="datetime-local" name="scheduledAt" class="form-control" required>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label">Meeting ID</label>
+              <input type="text" name="meetingId" class="form-control" placeholder="123 456 7890" value="<%= tutor.interviewDetails && tutor.interviewDetails.meetingId ? tutor.interviewDetails.meetingId : '' %>">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Passcode</label>
+              <input type="text" name="passcode" class="form-control" placeholder="xyz123" value="<%= tutor.interviewDetails && tutor.interviewDetails.passcode ? tutor.interviewDetails.passcode : '' %>">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Instructions for Tutor</label>
+            <textarea name="notes" class="form-control" rows="2" placeholder="e.g. Please join on time with original degrees ready.">Please have your academic degree certificates and ID proof ready for video verification.</textarea>
+          </div>
+
+          <button type="submit" class="btn btn-zoom btn-block">
+            🚀 Send Zoom Link via Email
+          </button>
+        </form>
+      </div>
+
+      <!-- 2. Verify Profile Box -->
+      <div class="action-card mb-4 verification-decision-card">
+        <h3>✅ Step 2: Post-Interview Decision</h3>
+        <p class="text-muted">After conducting the Zoom interview and reviewing credentials, make your verification decision.</p>
+
+        <form action="/admin/tutors/<%= tutor._id %>/verify" method="POST" class="mt-3" onsubmit="return confirm('Publish this tutor to the main website front page?');">
+          <div class="form-group">
+            <label class="form-label">Admin Interview Notes (Optional)</label>
+            <textarea name="adminNotes" class="form-control" rows="2" placeholder="e.g. Verified B.Sc & M.Sc degrees from DU. Clear English and Hindi communication. Excellent pedagogy."><%= tutor.adminNotes || '' %></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-success btn-block btn-lg">
+            ✅ Verify & Publish Profile to Front Page
+          </button>
+        </form>
+
+        <form action="/admin/tutors/<%= tutor._id %>/reject" method="POST" class="mt-3" onsubmit="return confirm('Reject this tutor application?');">
+          <input type="hidden" name="adminNotes" value="Did not meet verification criteria during Zoom interview">
+          <button type="submit" class="btn btn-ghost-danger btn-block">
+            ❌ Reject Application
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

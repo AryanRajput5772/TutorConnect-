@@ -1,0 +1,84 @@
+<%- include('../partials/header') %>
+
+<div class="admin-dashboard-wrapper">
+  <div class="container py-4">
+    <div class="admin-header flex-between">
+      <div>
+        <div class="admin-badge-role">🛡️ Administrator Portal</div>
+        <h1>Parent Tuition Inquiries & Requests</h1>
+        <p class="text-muted">Manage parent inquiries submitted through tutor profile pages.</p>
+      </div>
+      <div>
+        <a href="/admin/dashboard" class="btn btn-outline">&larr; Back to Tutors Dashboard</a>
+      </div>
+    </div>
+
+    <div class="dashboard-card mt-4">
+      <% if (inquiries && inquiries.length > 0) { %>
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Parent Name & Phone</th>
+                <th>Requested Tutor</th>
+                <th>Student Grade</th>
+                <th>Locality</th>
+                <th>Subjects</th>
+                <th>Timing</th>
+                <th>Notes</th>
+                <th>Status</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% inquiries.forEach(inq => { %>
+                <tr>
+                  <td>
+                    <strong><%= inq.parentName %></strong>
+                    <div><a href="tel:<%= inq.parentPhone %>" class="phone-link">📞 <%= inq.parentPhone %></a></div>
+                    <% if (inq.parentEmail) { %>
+                      <small class="text-muted"><%= inq.parentEmail %></small>
+                    <% } %>
+                  </td>
+                  <td>
+                    <% if (inq.tutor) { %>
+                      <a href="/admin/tutors/<%= inq.tutor._id %>"><strong><%= inq.tutor.name %></strong></a>
+                      <div class="cell-sub"><%= inq.tutor.phone %></div>
+                    <% } else { %>
+                      <span class="text-muted">Tutor removed</span>
+                    <% } %>
+                  </td>
+                  <td><span class="badge badge-light"><%= inq.studentGrade %></span></td>
+                  <td>📍 <%= inq.locality %></td>
+                  <td><%= inq.subjectsNeeded.join(', ') || 'Core Subjects' %></td>
+                  <td><%= inq.preferredTiming %></td>
+                  <td><small><%= inq.message || '—' %></small></td>
+                  <td>
+                    <form action="/admin/inquiries/<%= inq._id %>/status" method="POST" class="status-change-form">
+                      <select name="status" class="form-control form-control-sm" onchange="this.form.submit()">
+                        <option value="new" <%= inq.status === 'new' ? 'selected' : '' %>>New</option>
+                        <option value="contacted" <%= inq.status === 'contacted' ? 'selected' : '' %>>Contacted</option>
+                        <option value="demo_scheduled" <%= inq.status === 'demo_scheduled' ? 'selected' : '' %>>Demo Scheduled</option>
+                        <option value="enrolled" <%= inq.status === 'enrolled' ? 'selected' : '' %>>Enrolled</option>
+                        <option value="closed" <%= inq.status === 'closed' ? 'selected' : '' %>>Closed</option>
+                      </select>
+                    </form>
+                  </td>
+                  <td><small><%= new Date(inq.createdAt).toLocaleDateString() %></small></td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      <% } else { %>
+        <div class="empty-state">
+          <div class="empty-icon">📩</div>
+          <h3>No Parent Inquiries Yet</h3>
+          <p>When parents request home tuition or demo classes on verified tutor profiles, they will appear here.</p>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

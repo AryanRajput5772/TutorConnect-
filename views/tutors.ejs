@@ -1,0 +1,168 @@
+<%- include('partials/header') %>
+
+<div class="page-header">
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="/">Home</a> <span>/</span> <span>Verified Tutors</span>
+    </div>
+    <h1>Browse Verified Home Tutors</h1>
+    <p>Find background-checked, Zoom-interviewed home tutors in your locality.</p>
+  </div>
+</div>
+
+<div class="container py-4">
+  <div class="directory-layout">
+    <!-- Filter Sidebar -->
+    <aside class="filter-sidebar">
+      <div class="filter-card">
+        <div class="filter-header">
+          <h3>Filter Tutors</h3>
+          <a href="/tutors" class="filter-reset">Reset</a>
+        </div>
+
+        <form action="/tutors" method="GET" id="filterForm">
+          <!-- Subject -->
+          <div class="form-group">
+            <label class="form-label">Subject</label>
+            <input type="text" name="subject" class="form-control" placeholder="e.g. Maths, Physics, English" value="<%= filters.subject %>">
+          </div>
+
+          <!-- Location -->
+          <div class="form-group">
+            <label class="form-label">Locality / City</label>
+            <input type="text" name="location" class="form-control" placeholder="e.g. South Delhi, Saket" value="<%= filters.location %>">
+          </div>
+
+          <!-- Class Grade -->
+          <div class="form-group">
+            <label class="form-label">Grade / Class</label>
+            <select name="classGrade" class="form-control">
+              <option value="">All Classes</option>
+              <option value="Class 1-5" <%= filters.classGrade === 'Class 1-5' ? 'selected' : '' %>>Primary (Class 1 - 5)</option>
+              <option value="Class 6-8" <%= filters.classGrade === 'Class 6-8' ? 'selected' : '' %>>Middle (Class 6 - 8)</option>
+              <option value="Class 9-10" <%= filters.classGrade === 'Class 9-10' ? 'selected' : '' %>>High School (Class 9 - 10)</option>
+              <option value="Class 11-12" <%= filters.classGrade === 'Class 11-12' ? 'selected' : '' %>>Senior Secondary (Class 11 - 12)</option>
+            </select>
+          </div>
+
+          <!-- Max Hourly Fee -->
+          <div class="form-group">
+            <label class="form-label">Max Fee (₹ / hour)</label>
+            <input type="number" name="maxFee" class="form-control" placeholder="e.g. 800" value="<%= filters.maxFee %>">
+          </div>
+
+          <!-- Teaching Mode -->
+          <div class="form-group">
+            <label class="form-label">Tuition Mode</label>
+            <select name="mode" class="form-control">
+              <option value="all" <%= filters.mode === 'all' ? 'selected' : '' %>>All Modes</option>
+              <option value="home_tuition" <%= filters.mode === 'home_tuition' ? 'selected' : '' %>>Home Tuition at Student's Place</option>
+              <option value="online" <%= filters.mode === 'online' ? 'selected' : '' %>>Online</option>
+            </select>
+          </div>
+
+          <!-- Sort by -->
+          <div class="form-group">
+            <label class="form-label">Sort By</label>
+            <select name="sortBy" class="form-control">
+              <option value="rating" <%= filters.sortBy === 'rating' ? 'selected' : '' %>>Highest Rated</option>
+              <option value="experience" <%= filters.sortBy === 'experience' ? 'selected' : '' %>>Most Experienced</option>
+              <option value="fee_low" <%= filters.sortBy === 'fee_low' ? 'selected' : '' %>>Fee: Low to High</option>
+              <option value="fee_high" <%= filters.sortBy === 'fee_high' ? 'selected' : '' %>>Fee: High to Low</option>
+              <option value="newest" <%= filters.sortBy === 'newest' ? 'selected' : '' %>>Recently Verified</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block">Apply Filters</button>
+        </form>
+      </div>
+    </aside>
+
+    <!-- Main Results List -->
+    <main class="directory-main">
+      <div class="results-bar">
+        <div class="results-count">
+          Showing <strong><%= tutors.length %></strong> verified <%= tutors.length === 1 ? 'tutor' : 'tutors' %>
+        </div>
+        <div class="verification-pill-badge">
+          🛡️ All listings are Zoom Interviewed & Verified
+        </div>
+      </div>
+
+      <% if (tutors && tutors.length > 0) { %>
+        <div class="tutors-grid">
+          <% tutors.forEach(tutor => { %>
+            <div class="tutor-card">
+              <div class="tutor-card-header">
+                <div class="tutor-avatar-wrapper">
+                  <img src="<%= tutor.avatar %>" alt="<%= tutor.name %>" class="tutor-avatar" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400'">
+                  <span class="verified-indicator">✓</span>
+                </div>
+                <div class="tutor-header-info">
+                  <div class="verified-pill">
+                    <span class="shield-icon">🛡️</span> Verified Tutor
+                  </div>
+                  <h3 class="tutor-name"><%= tutor.name %></h3>
+                  <p class="tutor-qualification"><%= tutor.qualification %></p>
+                  <div class="tutor-rating">
+                    <span class="stars">★★★★★</span>
+                    <span class="rating-num"><%= tutor.rating %></span>
+                    <span class="review-count">(<%= tutor.reviewCount %>)</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tutor-card-body">
+                <p class="tutor-bio-snippet"><%= tutor.bio %></p>
+
+                <div class="tutor-meta-group">
+                  <span class="meta-label">Subjects:</span>
+                  <div class="tutor-subjects-tags">
+                    <% tutor.subjects.forEach(subject => { %>
+                      <span class="subject-tag"><%= subject %></span>
+                    <% }) %>
+                  </div>
+                </div>
+
+                <div class="tutor-meta-group">
+                  <span class="meta-label">Preferred Areas:</span>
+                  <div class="locality-chips">
+                    <span class="location-icon">📍</span>
+                    <span class="locality-text">
+                      <%= tutor.preferredLocations && tutor.preferredLocations.length > 0 ? tutor.preferredLocations.join(', ') : tutor.city %>
+                    </span>
+                  </div>
+                </div>
+
+                <div class="tutor-quick-specs">
+                  <div class="spec-item"><span class="spec-icon">⏱️</span> <%= tutor.experienceYears %>+ Yrs Exp</div>
+                  <div class="spec-item"><span class="spec-icon">🏠</span> Home Tuition</div>
+                  <div class="spec-item"><span class="spec-icon">📅</span> <%= tutor.availability %></div>
+                </div>
+              </div>
+
+              <div class="tutor-card-footer">
+                <div class="tutor-fee-display">
+                  <span class="fee-label">Tuition Fee</span>
+                  <span class="fee-amount">₹<%= tutor.hourlyFee %> <small>/ hour</small></span>
+                </div>
+                <a href="/tutors/<%= tutor._id %>" class="btn btn-primary btn-sm">
+                  View Profile & Book Demo
+                </a>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      <% } else { %>
+        <div class="empty-state">
+          <div class="empty-icon">🔍</div>
+          <h3>No matching verified tutors found</h3>
+          <p>Try broadening your search criteria or resetting filters.</p>
+          <a href="/tutors" class="btn btn-outline">Clear All Filters</a>
+        </div>
+      <% } %>
+    </main>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

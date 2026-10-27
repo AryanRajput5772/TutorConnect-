@@ -1,0 +1,37 @@
+<%- include('../partials/header') %>
+
+<div class="auth-page-wrapper">
+  <div class="container auth-container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <span class="auth-badge">🛡️ Admin Portal</span>
+        <h2>TutorConnect Staff Login</h2>
+        <p>Access the verification dashboard to review tutor applications, schedule Zoom interviews, and verify teachers.</p>
+      </div>
+
+      <form action="/admin/login" method="POST" class="auth-form">
+        <div class="form-group">
+          <label class="form-label">Admin Email</label>
+          <input type="email" name="email" class="form-control" required placeholder="admin@tutorconnect.com" value="admin@tutorconnect.com">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input type="password" name="password" class="form-control" required placeholder="••••••••" value="admin123">
+        </div>
+
+        <div class="demo-cred-callout">
+          <strong>Default Admin Credentials:</strong><br>
+          Email: <code>admin@tutorconnect.com</code><br>
+          Password: <code>admin123</code>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block btn-lg mt-3">
+          Sign In to Admin Dashboard &rarr;
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>
