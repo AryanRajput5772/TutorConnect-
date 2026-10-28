@@ -1885,3 +1885,51 @@ img {
   .footer-grid { grid-template-columns: 1fr; }
   .admin-metrics-grid { grid-template-columns: 1fr; }
 }
+
+/* Tutor Profile Photo Upload Component */
+.photo-upload-container {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: #f8fafc;
+  padding: 16px 20px;
+  border-radius: var(--radius-md);
+  border: 1px dashed #cbd5e1;
+  transition: border-color 0.2s, background 0.2s;
+}
+.photo-upload-container:hover {
+  border-color: var(--primary);
+  background: #f0f7ff;
+}
+.photo-preview-box {
+  width: 90px;
+  height: 90px;
+  min-width: 90px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #ffffff;
+  border: 3px solid #ffffff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.avatar-preview-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.photo-upload-controls {
+  flex: 1;
+}
+.photo-upload-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+.upload-btn {
+  cursor: pointer;
+  margin: 0;
+}
+

@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2563eb" />
+      <stop offset="100%" stop-color="#1d4ed8" />
+    </linearGradient>
+    <linearGradient id="avatarGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95" />
+      <stop offset="100%" stop-color="#e2e8f0" stop-opacity="0.85" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Circular Background -->
+  <circle cx="100" cy="100" r="100" fill="url(#bgGrad)" />
+  
+  <!-- Subtle inner border -->
+  <circle cx="100" cy="100" r="96" fill="none" stroke="#60a5fa" stroke-width="2" stroke-opacity="0.4" />
+  
+  <!-- User Head -->
+  <circle cx="100" cy="72" r="32" fill="url(#avatarGrad)" />
+  
+  <!-- User Shoulders / Body -->
+  <path d="M42 166 C42 126, 68 116, 100 116 C132 116, 158 126, 158 166 C158 178, 142 188, 100 188 C58 188, 42 178, 42 166 Z" fill="url(#avatarGrad)" />
+  
+  <!-- Small graduation cap icon overlay on upper right -->
+  <g transform="translate(122, 28) scale(0.7)">
+    <polygon points="30,5 58,18 30,31 2,18" fill="#fbbf24" />
+    <polygon points="30,31 54,20 54,32 30,44 6,32 6,20" fill="#f59e0b" />
+    <path d="M54 22 L54 44" stroke="#d97706" stroke-width="3" stroke-linecap="round" />
+    <circle cx="54" cy="46" r="3" fill="#d97706" />
+  </g>
+</svg>

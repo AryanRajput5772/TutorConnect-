@@ -23,8 +23,8 @@ app.use(express.static(path.join(process.cwd(), 'public')));
 
 // Middleware
 app.use(morgan('dev'));
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(express.json({ limit: '10mb' }));
 app.use(methodOverride('_method'));
 
 // Ensure DB connection is active for each request (vital for serverless cold starts)

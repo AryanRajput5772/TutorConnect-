@@ -10,7 +10,7 @@
     <div class="admin-detail-main">
       <div class="detail-box">
         <div class="admin-profile-head">
-          <img src="<%= tutor.avatar %>" alt="<%= tutor.name %>" class="admin-large-avatar" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400'">
+          <img src="<%= tutor.avatar %>" alt="<%= tutor.name %>" class="admin-large-avatar" onerror="this.src='/images/default-avatar.svg'">
           <div>
             <div class="status-pill status-<%= tutor.verificationStatus %>">
               Status: <%= tutor.verificationStatus.toUpperCase() %>

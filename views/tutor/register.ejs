@@ -69,6 +69,37 @@
           </div>
         </div>
 
+        <!-- Tutor Profile Photo (Optional) -->
+        <div class="form-group mt-3">
+          <label class="form-label">Tutor Profile Photo (Optional)</label>
+          <div class="photo-upload-container">
+            <div class="photo-preview-box">
+              <img id="avatarPreview" src="/images/default-avatar.svg" alt="Avatar Preview" class="avatar-preview-img" onerror="this.src='/images/default-avatar.svg'">
+            </div>
+            <div class="photo-upload-controls">
+              <div class="photo-upload-buttons">
+                <label for="avatarFileInput" class="btn btn-outline btn-sm upload-btn">
+                  📷 Choose Photo from Device
+                </label>
+                <input type="file" id="avatarFileInput" accept="image/png, image/jpeg, image/webp" style="display:none;">
+                <button type="button" id="removePhotoBtn" class="btn btn-ghost btn-sm" style="display:none;">
+                  ✕ Use Default Logo Avatar
+                </button>
+              </div>
+              <!-- Hidden input containing the base64 or URL avatar -->
+              <input type="hidden" name="avatar" id="avatarHiddenInput" value="<%= typeof formData !== 'undefined' && formData.avatar ? formData.avatar : '' %>">
+              
+              <div class="url-fallback-row mt-2">
+                <small class="text-muted">Or paste an image web link:</small>
+                <input type="url" id="avatarUrlInput" class="form-control form-control-sm mt-1" placeholder="https://example.com/photo.jpg" value="<%= typeof formData !== 'undefined' && formData.avatar && formData.avatar.startsWith('http') ? formData.avatar : '' %>">
+              </div>
+              <small class="form-hint mt-2" style="display:block;">
+                🛡️ <em>If no photo is uploaded, your profile will cleanly display the official TutorConnect tutor logo avatar instead of a random image.</em>
+              </small>
+            </div>
+          </div>
+        </div>
+
         <!-- Section 2: Qualifications & Experience -->
         <div class="form-section-title mt-4">
           <h4>2. Academic Qualifications & Experience</h4>
@@ -157,5 +188,97 @@
     </div>
   </div>
 </div>
+
+<script>
+  (function() {
+    const fileInput = document.getElementById('avatarFileInput');
+    const hiddenInput = document.getElementById('avatarHiddenInput');
+    const urlInput = document.getElementById('avatarUrlInput');
+    const previewImg = document.getElementById('avatarPreview');
+    const removeBtn = document.getElementById('removePhotoBtn');
+    const defaultAvatarUrl = '/images/default-avatar.svg';
+
+    // Helper: resize image on client side using canvas to avoid large payloads
+    function resizeAndSetImage(file) {
+      if (!file) return;
+      if (!file.type.startsWith('image/')) {
+        alert('Please select an image file (JPG, PNG, WebP)');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const maxDim = 400;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > maxDim) {
+              height = Math.round((height * maxDim) / width);
+              width = maxDim;
+            }
+          } else {
+            if (height > maxDim) {
+              width = Math.round((width * maxDim) / height);
+              height = maxDim;
+            }
+          }
+
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          // Compress to lightweight JPEG data URI
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+          previewImg.src = compressedDataUrl;
+          hiddenInput.value = compressedDataUrl;
+          urlInput.value = '';
+          removeBtn.style.display = 'inline-flex';
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    fileInput.addEventListener('change', function(e) {
+      if (e.target.files && e.target.files[0]) {
+        resizeAndSetImage(e.target.files[0]);
+      }
+    });
+
+    urlInput.addEventListener('input', function(e) {
+      const url = e.target.value.trim();
+      if (url) {
+        previewImg.src = url;
+        hiddenInput.value = url;
+        removeBtn.style.display = 'inline-flex';
+      } else {
+        resetToDefault();
+      }
+    });
+
+    removeBtn.addEventListener('click', function() {
+      resetToDefault();
+    });
+
+    function resetToDefault() {
+      fileInput.value = '';
+      urlInput.value = '';
+      hiddenInput.value = '';
+      previewImg.src = defaultAvatarUrl;
+      removeBtn.style.display = 'none';
+    }
+
+    // Check if initial value exists
+    if (hiddenInput.value) {
+      previewImg.src = hiddenInput.value;
+      removeBtn.style.display = 'inline-flex';
+    }
+  })();
+</script>
 
 <%- include('../partials/footer') %>

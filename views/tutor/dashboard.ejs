@@ -260,10 +260,34 @@
           </div>
         </div>
 
-        <div class="form-group">
-          <label class="form-label">Profile Avatar Image URL</label>
-          <input type="url" name="avatar" class="form-control" value="<%= tutor.avatar %>" placeholder="https://example.com/photo.jpg">
-          <small class="form-hint">Enter an image URL for your profile photo or leave default.</small>
+        <!-- Profile Avatar Component -->
+        <div class="form-group mt-3">
+          <label class="form-label">Tutor Profile Photo</label>
+          <div class="photo-upload-container">
+            <div class="photo-preview-box">
+              <img id="dashAvatarPreview" src="<%= tutor.avatar || '/images/default-avatar.svg' %>" alt="Profile Photo" class="avatar-preview-img" onerror="this.src='/images/default-avatar.svg'">
+            </div>
+            <div class="photo-upload-controls">
+              <div class="photo-upload-buttons">
+                <label for="dashAvatarFileInput" class="btn btn-outline btn-sm upload-btn">
+                  📷 Upload New Photo
+                </label>
+                <input type="file" id="dashAvatarFileInput" accept="image/png, image/jpeg, image/webp" style="display:none;">
+                <button type="button" id="dashRemovePhotoBtn" class="btn btn-ghost btn-sm">
+                  ✕ Use Default Logo Avatar
+                </button>
+              </div>
+              <input type="hidden" name="avatar" id="dashAvatarHiddenInput" value="<%= tutor.avatar || '' %>">
+              
+              <div class="url-fallback-row mt-2">
+                <small class="text-muted">Or paste an image web link:</small>
+                <input type="url" id="dashAvatarUrlInput" class="form-control form-control-sm mt-1" placeholder="https://example.com/photo.jpg" value="<%= tutor.avatar && tutor.avatar.startsWith('http') ? tutor.avatar : '' %>">
+              </div>
+              <small class="form-hint mt-2" style="display:block;">
+                🛡️ <em>Your photo appears on your verified profile and public listing for parents.</em>
+              </small>
+            </div>
+          </div>
         </div>
 
         <div class="form-group">
@@ -278,5 +302,83 @@
     </div>
   </div>
 </div>
+
+<script>
+  (function() {
+    const fileInput = document.getElementById('dashAvatarFileInput');
+    const hiddenInput = document.getElementById('dashAvatarHiddenInput');
+    const urlInput = document.getElementById('dashAvatarUrlInput');
+    const previewImg = document.getElementById('dashAvatarPreview');
+    const removeBtn = document.getElementById('dashRemovePhotoBtn');
+    const defaultAvatarUrl = '/images/default-avatar.svg';
+
+    function resizeAndSetImage(file) {
+      if (!file) return;
+      if (!file.type.startsWith('image/')) {
+        alert('Please select an image file (JPG, PNG, WebP)');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const maxDim = 400;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > maxDim) {
+              height = Math.round((height * maxDim) / width);
+              width = maxDim;
+            }
+          } else {
+            if (height > maxDim) {
+              width = Math.round((width * maxDim) / height);
+              height = maxDim;
+            }
+          }
+
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+          previewImg.src = compressedDataUrl;
+          hiddenInput.value = compressedDataUrl;
+          urlInput.value = '';
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    fileInput.addEventListener('change', function(e) {
+      if (e.target.files && e.target.files[0]) {
+        resizeAndSetImage(e.target.files[0]);
+      }
+    });
+
+    urlInput.addEventListener('input', function(e) {
+      const url = e.target.value.trim();
+      if (url) {
+        previewImg.src = url;
+        hiddenInput.value = url;
+      } else {
+        previewImg.src = defaultAvatarUrl;
+        hiddenInput.value = defaultAvatarUrl;
+      }
+    });
+
+    removeBtn.addEventListener('click', function() {
+      fileInput.value = '';
+      urlInput.value = '';
+      hiddenInput.value = defaultAvatarUrl;
+      previewImg.src = defaultAvatarUrl;
+    });
+  })();
+</script>
 
 <%- include('../partials/footer') %>

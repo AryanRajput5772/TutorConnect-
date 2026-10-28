@@ -27,7 +27,7 @@ const tutorSchema = new mongoose.Schema(
     },
     avatar: {
       type: String,
-      default: '/images/default-avatar.png'
+      default: '/images/default-avatar.svg'
     },
     city: {
       type: String,

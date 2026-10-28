@@ -33,7 +33,8 @@ router.post('/register', redirectIfTutorAuth, async (req, res) => {
       monthlyFee,
       bio,
       availability,
-      gender
+      gender,
+      avatar
     } = req.body;
 
     // Basic Validation
@@ -81,10 +82,10 @@ router.post('/register', redirectIfTutorAuth, async (req, res) => {
       ? (Array.isArray(classes) ? classes : [classes])
       : ['Class 6-8', 'Class 9-10'];
 
-    // Generate modern avatar based on gender / name initials
-    const avatar = gender === 'Female'
-      ? `https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&auto=format&fit=crop&q=80`
-      : `https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&auto=format&fit=crop&q=80`;
+    // Use uploaded/provided avatar or default to standard logo avatar
+    const finalAvatar = (avatar && avatar.trim())
+      ? avatar.trim()
+      : '/images/default-avatar.svg';
 
     // Create new Tutor (default verificationStatus: 'pending', isVerified: false)
     const newTutor = new Tutor({
@@ -92,7 +93,7 @@ router.post('/register', redirectIfTutorAuth, async (req, res) => {
       email: email.toLowerCase().trim(),
       password,
       phone,
-      avatar,
+      avatar: finalAvatar,
       city: city || 'New Delhi',
       preferredLocations: locationsArray,
       qualification,
@@ -235,8 +236,9 @@ router.post('/profile/update', isTutorAuth, async (req, res) => {
     tutor.hourlyFee = Number(hourlyFee) || tutor.hourlyFee;
     tutor.monthlyFee = Number(monthlyFee) || tutor.monthlyFee;
     tutor.bio = bio || tutor.bio;
-    tutor.availability = availability || tutor.availability;
-    if (avatar && avatar.trim()) tutor.avatar = avatar.trim();
+    if (avatar !== undefined) {
+      tutor.avatar = (avatar && avatar.trim()) ? avatar.trim() : '/images/default-avatar.svg';
+    }
 
     if (subjects) {
       tutor.subjects = Array.isArray(subjects) ? subjects : subjects.split(',').map(s => s.trim()).filter(Boolean);
