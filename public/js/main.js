@@ -99,4 +99,35 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }, 6000);
   }
+
+  // 4. Toggle password visibility
+  const togglePasswordBtns = document.querySelectorAll('.toggle-password-btn');
+  togglePasswordBtns.forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const targetId = btn.getAttribute('data-target');
+      const input = targetId ? document.getElementById(targetId) : btn.closest('.password-input-wrapper')?.querySelector('input');
+      if (!input) return;
+
+      const isPassword = input.type === 'password';
+      input.type = isPassword ? 'text' : 'password';
+
+      const eyeShow = btn.querySelector('.eye-show');
+      const eyeHide = btn.querySelector('.eye-hide');
+
+      if (eyeShow && eyeHide) {
+        if (isPassword) {
+          eyeShow.style.display = 'none';
+          eyeHide.style.display = 'block';
+          btn.setAttribute('aria-label', 'Hide password');
+          btn.setAttribute('title', 'Hide password');
+        } else {
+          eyeShow.style.display = 'block';
+          eyeHide.style.display = 'none';
+          btn.setAttribute('aria-label', 'Show password');
+          btn.setAttribute('title', 'Show password');
+        }
+      }
+    });
+  });
 });

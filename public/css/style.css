@@ -1337,6 +1337,46 @@ img {
   gap: 16px;
 }
 
+/* Password visibility toggle */
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+.password-input-wrapper .form-control {
+  padding-right: 42px;
+}
+.toggle-password-btn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  border-radius: var(--radius-sm, 6px);
+  transition: color 0.15s ease, background-color 0.15s ease;
+  line-height: 0;
+}
+.toggle-password-btn:hover {
+  color: var(--primary);
+  background-color: rgba(37, 99, 235, 0.08);
+}
+.toggle-password-btn:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
+}
+.toggle-password-btn .eye-icon {
+  display: block;
+  pointer-events: none;
+}
+
 /* AUTH PAGES (Login / Register) */
 .auth-page-wrapper {
   padding: 50px 0;
