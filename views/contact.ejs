@@ -1,83 +1,121 @@
 <%- include('partials/header') %>
 
-<div class="page-header">
-  <div class="container">
-    <div class="breadcrumb">
+<div class="page-header contact-header">
+  <div class="container text-center">
+    <div class="breadcrumb justify-center">
       <a href="/">Home</a> <span>/</span> <span>Contact</span>
     </div>
-    <h1>Contact TutorConnect Support</h1>
-    <p>We are here to assist parents and teachers with any questions.</p>
+    <span class="section-tag mb-2">Academic & Technical Help</span>
+    <h1 class="page-title">Contact TutorConnect Support</h1>
+    <p class="page-subtitle">We are here to assist parents, students, and educators. Reach out for demo bookings, Zoom screening support, or general inquiries.</p>
   </div>
 </div>
 
 <div class="container py-5">
   <div class="contact-grid">
-    <div class="contact-info-card">
-      <h3>Get in Touch</h3>
-      <p>Have a question about booking a demo or applying as an educator? Reach out to our academic support desk.</p>
-
-      <div class="contact-item mt-4">
-        <span class="c-icon">📍</span>
-        <div>
-          <strong>Headquarters:</strong>
-          <p>TutorConnect Academic Services, Connaught Place, New Delhi - 110001</p>
+    <!-- Left Column: Contact Channels & Info Card -->
+    <div class="contact-info-col">
+      <div class="contact-info-card">
+        <div class="contact-info-header">
+          <span class="values-badge">Direct Support</span>
+          <h2 class="contact-card-title">Get in Touch with Our Team</h2>
+          <p class="contact-card-desc">Have questions about finding a verified home tutor, booking a doorstep trial class, or scheduling your tutor Zoom interview? Reach out to our dedicated academic desk.</p>
         </div>
-      </div>
 
-      <div class="contact-item">
-        <span class="c-icon">📞</span>
-        <div>
-          <strong>Helpline (WhatsApp):</strong>
-          <p>+91 98765 43210 (9 AM - 8 PM IST)</p>
+        <div class="contact-channels-list">
+          <!-- Item 1: Headquarters -->
+          <div class="contact-channel-item">
+            <div class="channel-icon-wrap">📍</div>
+            <div class="channel-meta">
+              <h4>Headquarters</h4>
+              <p>TutorConnect Academic Services, Connaught Place, New Delhi – 110001</p>
+            </div>
+          </div>
+
+          <!-- Item 2: Phone & WhatsApp -->
+          <div class="contact-channel-item">
+            <div class="channel-icon-wrap">📞</div>
+            <div class="channel-meta">
+              <h4>Helpline & WhatsApp Support</h4>
+              <p><a href="tel:+919876543210" class="channel-link">+91 98765 43210</a></p>
+              <div class="channel-badge-row">
+                <span class="channel-status-badge">🟢 Active Hours: 9:00 AM – 8:00 PM IST (Mon–Sat)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 3: Email Support -->
+          <div class="contact-channel-item">
+            <div class="channel-icon-wrap">📧</div>
+            <div class="channel-meta">
+              <h4>Official Email Inboxes</h4>
+              <p>
+                <a href="mailto:support@tutorconnect.com" class="channel-link">support@tutorconnect.com</a><br>
+                <a href="mailto:admin@tutorconnect.com" class="channel-link">admin@tutorconnect.com</a>
+              </p>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <div class="contact-item">
-        <span class="c-icon">📧</span>
-        <div>
-          <strong>Email Support:</strong>
-          <p>support@tutorconnect.com / admin@tutorconnect.com</p>
+        <!-- Trust & Response Guarantee Box -->
+        <div class="contact-guarantee-box">
+          <div class="guarantee-icon">⚡</div>
+          <div class="guarantee-text">
+            <strong>Prompt Response Guarantee</strong>
+            <p>Our academic coordinators reply to all inquiries within 2 hours during active business hours. Tutor verification queries are prioritized.</p>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="contact-form-card">
-      <h3>Send us a Message</h3>
-      <form action="/contact" method="POST" class="mt-3">
-        <div class="form-group">
-          <label class="form-label">Your Name</label>
-          <input type="text" name="name" class="form-control" required placeholder="e.g. Ramesh Kumar">
+    <!-- Right Column: Send Message Form Card -->
+    <div class="contact-form-col">
+      <div class="contact-form-card">
+        <div class="contact-form-header">
+          <span class="values-badge">Quick Inquiry</span>
+          <h2 class="contact-card-title">Send us a Message</h2>
+          <p class="contact-card-desc">Fill out the form below and an academic coordinator will contact you promptly via WhatsApp or phone call.</p>
         </div>
 
-        <div class="form-row-2">
+        <form action="/contact" method="POST" class="contact-form mt-4">
           <div class="form-group">
-            <label class="form-label">Phone Number</label>
-            <input type="tel" name="phone" class="form-control" required placeholder="+91 98765 43210">
+            <label class="form-label">Full Name *</label>
+            <input type="text" name="name" class="form-control" required placeholder="e.g. Ramesh Kumar">
           </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label">Mobile Number (WhatsApp) *</label>
+              <input type="tel" name="phone" class="form-control" required placeholder="+91 98765 43210">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email Address *</label>
+              <input type="email" name="email" class="form-control" required placeholder="ramesh@example.com">
+            </div>
+          </div>
+
           <div class="form-group">
-            <label class="form-label">Email</label>
-            <input type="email" name="email" class="form-control" required placeholder="ramesh@example.com">
+            <label class="form-label">I am a *</label>
+            <select name="userType" class="form-control">
+              <option value="parent">Parent looking for a verified home tutor</option>
+              <option value="tutor">Teacher inquiring about verification / Zoom interview</option>
+              <option value="other">General inquiry / Partnership</option>
+            </select>
           </div>
-        </div>
 
-        <div class="form-group">
-          <label class="form-label">I am a</label>
-          <select name="userType" class="form-control">
-            <option value="parent">Parent looking for a tutor</option>
-            <option value="tutor">Teacher inquiring about verification / Zoom interview</option>
-            <option value="other">General inquiry</option>
-          </select>
-        </div>
+          <div class="form-group">
+            <label class="form-label">Your Message / Requirements *</label>
+            <textarea name="message" class="form-control" rows="4" required placeholder="Tell us about the student's grade, subjects, preferred area, or any specific questions you have..."></textarea>
+          </div>
 
-        <div class="form-group">
-          <label class="form-label">Your Message</label>
-          <textarea name="message" class="form-control" rows="4" required placeholder="Describe your query..."></textarea>
-        </div>
-
-        <button type="submit" class="btn btn-primary btn-block btn-lg">
-          Submit Message &rarr;
-        </button>
-      </form>
+          <div class="contact-submit-wrap">
+            <button type="submit" class="btn btn-primary btn-block btn-lg">
+              Submit Message &rarr;
+            </button>
+            <p class="contact-privacy-note">🔒 Your contact information is never shared with third-party advertisers or unverified parties.</p>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </div>

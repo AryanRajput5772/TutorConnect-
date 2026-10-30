@@ -27,6 +27,12 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(express.json({ limit: '10mb' }));
 app.use(methodOverride('_method'));
 
+// Ensure req.body is always an object across serverless invocations and empty-payload form submissions
+app.use((req, res, next) => {
+  if (!req.body) req.body = {};
+  next();
+});
+
 // Ensure DB connection is active for each request (vital for serverless cold starts)
 app.use(async (req, res, next) => {
   try {

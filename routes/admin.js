@@ -207,7 +207,7 @@ router.post(['/tutors/:id/verify', '/admin/tutors/:id/verify'], isAdminAuth, asy
       return res.redirect('/admin/dashboard');
     }
 
-    const { adminNotes } = req.body;
+    const { adminNotes } = req.body || {};
 
     tutor.isVerified = true;
     tutor.verificationStatus = 'verified';
@@ -245,7 +245,7 @@ router.post(['/tutors/:id/reject', '/admin/tutors/:id/reject'], isAdminAuth, asy
       return res.redirect('/admin/dashboard');
     }
 
-    const { adminNotes } = req.body;
+    const { adminNotes } = req.body || {};
 
     tutor.isVerified = false;
     tutor.verificationStatus = 'rejected';
@@ -299,7 +299,7 @@ router.get('/inquiries', isAdminAuth, async (req, res) => {
 // POST /admin/inquiries/:id/status - Update Inquiry Status
 router.post(['/inquiries/:id/status', '/admin/inquiries/:id/status'], isAdminAuth, async (req, res) => {
   try {
-    const { status } = req.body;
+    const { status } = req.body || {};
     await Inquiry.findByIdAndUpdate(req.params.id, { status });
     req.flash('success_msg', 'Inquiry status updated successfully');
     res.redirect('/admin/inquiries');

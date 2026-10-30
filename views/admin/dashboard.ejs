@@ -214,6 +214,7 @@
                       <!-- 2. Verify Tutor Button -->
                       <% if (!tutor.isVerified) { %>
                         <form action="/admin/tutors/<%= tutor._id %>/verify" method="POST" class="actions-form-full" onsubmit="return confirm('Confirm that you have completed the Zoom interview with <%= tutor.name %> and verified their qualifications? Their profile will be published on the front page immediately.');">
+                          <input type="hidden" name="adminNotes" value="Verified via Admin Quick Actions">
                           <button type="submit" class="btn btn-success-sm btn-sm" title="Mark as Verified after Zoom interview">
                             ✅ Verify & Publish
                           </button>
@@ -232,12 +233,14 @@
 
                         <% if (tutor.verificationStatus !== 'rejected') { %>
                           <form action="/admin/tutors/<%= tutor._id %>/reject" method="POST" class="action-reject-form" onsubmit="return confirm('Are you sure you want to reject this tutor?');">
+                            <input type="hidden" name="adminNotes" value="Application rejected via Admin Quick Actions">
                             <button type="submit" class="btn btn-ghost-danger btn-sm action-reject-btn" title="Reject Application">
                               ✕
                             </button>
                           </form>
                         <% } else { %>
                           <form action="/admin/tutors/<%= tutor._id %>/revert-pending" method="POST" class="action-revert-form">
+                            <input type="hidden" name="adminNotes" value="">
                             <button type="submit" class="btn btn-outline btn-sm action-revert-btn" title="Revert to Pending">
                               🔄
                             </button>
