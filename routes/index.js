@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const path = require('path');
 const Tutor = require('../models/Tutor');
 const Inquiry = require('../models/Inquiry');
 
@@ -221,6 +222,18 @@ router.get('/contact', (req, res) => {
 router.post('/contact', (req, res) => {
   req.flash('success_msg', 'Thank you! Your message has been received. Our team will get back to you within 24 hours.');
   res.redirect('/contact');
+});
+
+// GET /sitemap.xml - SEO XML Sitemap
+router.get('/sitemap.xml', (req, res) => {
+  res.type('application/xml');
+  res.sendFile(path.join(process.cwd(), 'public', 'sitemap.xml'));
+});
+
+// GET /robots.txt - SEO Crawl Directives
+router.get('/robots.txt', (req, res) => {
+  res.type('text/plain');
+  res.sendFile(path.join(process.cwd(), 'public', 'robots.txt'));
 });
 
 module.exports = router;
