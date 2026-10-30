@@ -6,8 +6,29 @@ document.addEventListener('DOMContentLoaded', () => {
   const navMenu = document.getElementById('navMenu');
 
   if (navToggle && navMenu) {
-    navToggle.addEventListener('click', () => {
+    navToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isActive = navToggle.classList.toggle('active');
       navMenu.classList.toggle('show');
+      navToggle.setAttribute('aria-expanded', isActive ? 'true' : 'false');
+    });
+
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (navMenu.classList.contains('show') && !navMenu.contains(e.target) && !navToggle.contains(e.target)) {
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('show');
+        navToggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    // Close mobile menu when a nav link is clicked
+    navMenu.querySelectorAll('.nav-link, .btn').forEach((link) => {
+      link.addEventListener('click', () => {
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('show');
+        navToggle.setAttribute('aria-expanded', 'false');
+      });
     });
   }
 
