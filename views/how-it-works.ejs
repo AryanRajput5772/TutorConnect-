@@ -1,96 +1,151 @@
 <%- include('partials/header') %>
 
-<div class="page-header">
-  <div class="container">
-    <div class="breadcrumb">
+<div class="page-header how-it-works-header">
+  <div class="container text-center">
+    <div class="breadcrumb justify-center">
       <a href="/">Home</a> <span>/</span> <span>How It Works</span>
     </div>
-    <h1>How TutorConnect Works</h1>
-    <p>Safety, Academic Excellence, and Total Transparency in Home Tuition.</p>
+    <span class="section-tag mb-2">Simple, Safe & Transparent</span>
+    <h1 class="page-title">How TutorConnect Works</h1>
+    <p class="page-subtitle">We bridge the gap between quality education and student safety through mandatory Zoom video interviews and credential verification.</p>
   </div>
 </div>
 
 <div class="container py-5">
   <!-- Parent workflow -->
   <div class="process-section">
-    <div class="section-header text-center mb-5">
-      <span class="section-tag">For Parents</span>
-      <h2>Finding the Perfect Verified Tutor in 3 Simple Steps</h2>
+    <div class="section-header text-center">
+      <span class="section-tag">For Parents & Students</span>
+      <h2 class="section-title">Finding the Perfect Verified Tutor in 3 Simple Steps</h2>
+      <p class="section-subtitle">No middlemen agencies or unreliable classifieds. Direct, verified home tuition tailored to your child.</p>
     </div>
 
     <div class="step-cards-grid">
       <div class="step-card">
-        <div class="step-num">Step 1</div>
-        <h3>Search by Locality & Subject</h3>
-        <p>Enter your neighborhood and your child's grade and subjects. Filter by hourly budget and tutor experience.</p>
+        <div class="step-card-header">
+          <span class="step-num-badge">Step 01</span>
+          <span class="step-icon">🔍</span>
+        </div>
+        <h3 class="step-title">Search by Locality & Subject</h3>
+        <p class="step-desc">Enter your neighborhood, student's grade (Class 1–12), and target subjects. Filter by tutor experience and hourly budget.</p>
+        <div class="step-footer-perk">
+          <span class="perk-check">✓</span> 500+ Localities & Cities Covered
+        </div>
+      </div>
+
+      <div class="step-card highlight-step-card">
+        <div class="step-card-header">
+          <span class="step-num-badge">Step 02</span>
+          <span class="step-icon">📋</span>
+        </div>
+        <h3 class="step-title">Review Verified Credentials</h3>
+        <p class="step-desc">Inspect university degrees, past teaching experience, parent reviews, and transparent hourly/monthly fees with complete confidence.</p>
+        <div class="step-footer-perk">
+          <span class="perk-check">✓</span> 100% Zoom Screened & Credential Checked
+        </div>
       </div>
 
       <div class="step-card">
-        <div class="step-num">Step 2</div>
-        <h3>Check Verified Credentials</h3>
-        <p>Review the tutor's verified qualifications, college degrees, subjects, and transparent hourly/monthly fees.</p>
-      </div>
-
-      <div class="step-card">
-        <div class="step-num">Step 3</div>
-        <h3>Request a Free Demo Class</h3>
-        <p>Submit a home tuition request. The verified teacher contacts you to schedule an initial trial session at your doorstep.</p>
+        <div class="step-card-header">
+          <span class="step-num-badge">Step 03</span>
+          <span class="step-icon">🎯</span>
+        </div>
+        <h3 class="step-title">Request a Free Demo Class</h3>
+        <p class="step-desc">Submit your tuition request. The verified tutor contacts you directly to schedule an in-person doorstep trial session for your child.</p>
+        <div class="step-footer-perk">
+          <span class="perk-check">✓</span> 100% Risk-Free 1st Trial Session
+        </div>
       </div>
     </div>
   </div>
 
   <!-- Tutor verification workflow -->
-  <div class="process-section mt-5" id="interview">
-    <div class="section-header text-center mb-5">
-      <span class="section-tag">For Educators</span>
-      <h2>Our 4-Stage Tutor Verification Protocol</h2>
-      <p class="section-subtitle">Why parents trust TutorConnect: only top educators are approved.</p>
+  <div class="process-section verification-timeline-section mt-5" id="interview">
+    <div class="section-header text-center">
+      <span class="section-tag">For Educators & Parents</span>
+      <h2 class="section-title">Our 4-Stage Tutor Verification Protocol</h2>
+      <p class="section-subtitle">Why families trust TutorConnect: less than 15% of applicant educators meet our rigorous academic and communication standards.</p>
     </div>
 
     <div class="verification-deep-dive">
-      <div class="deep-dive-item">
-        <div class="dd-badge">1</div>
-        <div class="dd-content">
-          <h4>Online Profile & Credential Submission</h4>
-          <p>Tutors create an account and detail their educational history, university degrees, subjects, fees, and preferred localities.</p>
+      <!-- Stage 1 -->
+      <div class="deep-dive-card">
+        <div class="dd-badge-col">
+          <div class="dd-circle-badge">1</div>
+        </div>
+        <div class="dd-content-col">
+          <div class="dd-stage-label">Stage 1: Application</div>
+          <h3 class="dd-title">Online Application & Academic Credential Submission</h3>
+          <p class="dd-text">Tutors register on TutorConnect and submit their educational background, degrees, university marksheets, teaching track record, hourly tuition rates, and preferred tutoring localities.</p>
         </div>
       </div>
 
-      <div class="deep-dive-item highlight-dd">
-        <div class="dd-badge">2</div>
-        <div class="dd-content">
-          <h4>Live Zoom Interview with Academic Admin</h4>
-          <p>Our academic coordinator reviews the application on the Admin Dashboard and sends a Zoom meeting link via email. During the 15-minute video interview, we evaluate:</p>
-          <ul>
-            <li>Subject knowledge and pedagogy</li>
-            <li>Communication skills and patience with children</li>
-            <li>Original degree and ID proof verification on video</li>
-            <li>Past track record and teaching references</li>
-          </ul>
+      <!-- Stage 2 (Hero Zoom Step) -->
+      <div class="deep-dive-card highlight-dd-card">
+        <div class="dd-badge-col">
+          <div class="dd-circle-badge zoom-circle-badge">2</div>
+        </div>
+        <div class="dd-content-col">
+          <div class="dd-stage-label zoom-label">Stage 2: Live Screening (Crucial Safety Standard)</div>
+          <h3 class="dd-title">Mandatory Zoom Video Interview with Academic Admin</h3>
+          <p class="dd-text">Our academic panel reviews the application in the Admin Dashboard and sends the tutor a Zoom interview meeting link. During the 15-minute video interview, we evaluate:</p>
+          <div class="dd-eval-grid">
+            <div class="dd-eval-item">
+              <span class="eval-icon">📚</span>
+              <span><strong>Subject Mastery:</strong> Deep knowledge of CBSE, ICSE & state board syllabi.</span>
+            </div>
+            <div class="dd-eval-item">
+              <span class="eval-icon">🗣️</span>
+              <span><strong>Pedagogy:</strong> Patient communication and ability to explain difficult concepts simply.</span>
+            </div>
+            <div class="dd-eval-item">
+              <span class="eval-icon">🆔</span>
+              <span><strong>Identity Check:</strong> Live camera inspection of government ID and university degrees.</span>
+            </div>
+            <div class="dd-eval-item">
+              <span class="eval-icon">⭐</span>
+              <span><strong>References:</strong> Verification of past student results and professional conduct.</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="deep-dive-item">
-        <div class="dd-badge">3</div>
-        <div class="dd-content">
-          <h4>Admin Verification & Badge Grant</h4>
-          <p>Upon satisfactory interview performance, the admin clicks "Verify" to award the verified badge and publish the profile live on the homepage.</p>
+      <!-- Stage 3 -->
+      <div class="deep-dive-card">
+        <div class="dd-badge-col">
+          <div class="dd-circle-badge">3</div>
+        </div>
+        <div class="dd-content-col">
+          <div class="dd-stage-label">Stage 3: Accreditation</div>
+          <h3 class="dd-title">Admin Verification & Verified Badge Award</h3>
+          <p class="dd-text">Only tutors who pass the Zoom interview are marked as <strong>"Verified"</strong> by our academic admin. Their profile is published live on the front page directory with an official verified shield.</p>
         </div>
       </div>
 
-      <div class="deep-dive-item">
-        <div class="dd-badge">4</div>
-        <div class="dd-content">
-          <h4>Direct Home Tuition Assignments</h4>
-          <p>Parents in the tutor's preferred localities can book demo sessions and start 1-on-1 home tuitions immediately.</p>
+      <!-- Stage 4 -->
+      <div class="deep-dive-card">
+        <div class="dd-badge-col">
+          <div class="dd-circle-badge">4</div>
+        </div>
+        <div class="dd-content-col">
+          <div class="dd-stage-label">Stage 4: Teaching</div>
+          <h3 class="dd-title">Direct Home Tuition Inquiries & Demo Sessions</h3>
+          <p class="dd-text">Parents in the tutor's preferred localities can book demo sessions and start 1-on-1 personalized home tuition immediately with transparent hourly rates and zero agency commissions.</p>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="text-center mt-5">
-    <a href="/tutors" class="btn btn-primary btn-lg">Browse Verified Tutors Now</a>
-    <a href="/tutor/register" class="btn btn-outline btn-lg ml-2">Apply as a Tutor</a>
+  <!-- Bottom CTA Actions -->
+  <div class="workflow-cta-banner mt-5">
+    <div class="cta-inner-box">
+      <h2>Ready to Experience Verified Home Tuition?</h2>
+      <p>Connect with vetted tutors near your home or join our verified teaching panel today.</p>
+      <div class="workflow-cta-buttons">
+        <a href="/tutors" class="btn btn-primary btn-lg">Browse Verified Tutors Now 🔍</a>
+        <a href="/tutor/register" class="btn btn-outline btn-lg">Apply as a Home Tutor 👨‍🏫</a>
+      </div>
+    </div>
   </div>
 </div>
 
