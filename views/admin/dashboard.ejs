@@ -105,88 +105,104 @@
           <table class="data-table admin-table">
             <thead>
               <tr>
-                <th>Tutor Details</th>
-                <th>Academic Qualifications</th>
-                <th>Subjects & Localities</th>
-                <th>Fee (₹)</th>
-                <th>Verification Status</th>
-                <th style="min-width: 250px;">Admin Actions</th>
+                <th class="col-tutor">Tutor Details</th>
+                <th class="col-qual">Academic Qualifications</th>
+                <th class="col-subjects">Subjects & Localities</th>
+                <th class="col-fee">Fee (₹)</th>
+                <th class="col-status">Verification Status</th>
+                <th class="col-actions">Admin Actions</th>
               </tr>
             </thead>
             <tbody>
               <% tutors.forEach(tutor => { %>
                 <tr class="tutor-row-<%= tutor.verificationStatus %>">
                   <!-- Tutor Col -->
-                  <td>
+                  <td class="col-tutor">
                     <div class="admin-tutor-cell">
                       <img src="<%= tutor.avatar %>" alt="<%= tutor.name %>" class="admin-table-avatar" onerror="this.src='/images/default-avatar.svg'">
-                      <div>
-                        <strong><%= tutor.name %></strong>
-                        <div class="cell-sub"><%= tutor.email %></div>
-                        <div class="cell-sub">📞 <%= tutor.phone %></div>
-                        <small class="text-muted">Applied: <%= new Date(tutor.createdAt).toLocaleDateString() %></small>
+                      <div class="admin-tutor-meta">
+                        <strong class="admin-tutor-name"><%= tutor.name %></strong>
+                        <div class="cell-sub cell-email" title="<%= tutor.email %>">
+                          <span class="cell-icon">📧</span> <%= tutor.email %>
+                        </div>
+                        <div class="cell-sub cell-phone">
+                          <span class="cell-icon">📞</span> <%= tutor.phone %>
+                        </div>
+                        <small class="cell-date">Applied: <%= new Date(tutor.createdAt).toLocaleDateString() %></small>
                       </div>
                     </div>
                   </td>
 
                   <!-- Qualifications Col -->
-                  <td>
-                    <strong><%= tutor.qualification %></strong>
-                    <% if (tutor.college) { %>
-                      <div class="cell-sub"><%= tutor.college %></div>
-                    <% } %>
-                    <div class="cell-badge">🏆 <%= tutor.experienceYears %> Yrs Exp</div>
+                  <td class="col-qual">
+                    <div class="admin-qual-cell">
+                      <strong class="qual-title"><%= tutor.qualification %></strong>
+                      <% if (tutor.college) { %>
+                        <div class="cell-sub qual-college"><%= tutor.college %></div>
+                      <% } %>
+                      <div class="cell-badge">🏆 <%= tutor.experienceYears %> Yrs Exp</div>
+                    </div>
                   </td>
 
                   <!-- Subjects & Localities Col -->
-                  <td>
+                  <td class="col-subjects">
                     <div class="admin-subjects-list">
                       <strong>Subjects:</strong> <%= tutor.subjects.join(', ') || 'N/A' %>
                     </div>
                     <div class="admin-localities-list mt-1">
                       <span class="loc-pin">📍</span> <%= tutor.preferredLocations && tutor.preferredLocations.length > 0 ? tutor.preferredLocations.join(', ') : tutor.city %>
                     </div>
-                    <small class="text-muted">Mode: <%= tutor.teachingMode %></small>
+                    <small class="cell-mode-note">Mode: <%= tutor.teachingMode === 'home_tuition' ? 'Home Tuition' : (tutor.teachingMode === 'online' ? 'Online' : 'Both') %></small>
                   </td>
 
                   <!-- Fees Col -->
-                  <td>
+                  <td class="col-fee">
                     <div class="admin-fee-badge">
-                      <strong>₹<%= tutor.hourlyFee %></strong>/hr
+                      <span class="fee-main">₹<%= tutor.hourlyFee %></span><span class="fee-unit">/hr</span>
+                      <% if (tutor.monthlyFee) { %>
+                        <span class="fee-sub">₹<%= tutor.monthlyFee %>/mo</span>
+                      <% } %>
                     </div>
-                    <% if (tutor.monthlyFee) { %>
-                      <small class="text-muted">₹<%= tutor.monthlyFee %>/mo</small>
-                    <% } %>
                   </td>
 
                   <!-- Status Col -->
-                  <td>
-                    <% if (tutor.verificationStatus === 'pending') { %>
-                      <span class="status-tag status-pending">⏳ Pending Review</span>
-                    <% } else if (tutor.verificationStatus === 'interview_scheduled') { %>
-                      <span class="status-tag status-scheduled">📹 Interview Scheduled</span>
-                      <% if (tutor.interviewDetails && tutor.interviewDetails.scheduledAt) { %>
-                        <div class="small-interview-time">
-                          <%= new Date(tutor.interviewDetails.scheduledAt).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) %>
-                        </div>
+                  <td class="col-status">
+                    <div class="status-cell-wrap">
+                      <% if (tutor.verificationStatus === 'pending') { %>
+                        <span class="status-tag status-pending">
+                          <span class="tag-dot"></span> Pending Review
+                        </span>
+                      <% } else if (tutor.verificationStatus === 'interview_scheduled') { %>
+                        <span class="status-tag status-scheduled">
+                          <span class="tag-dot"></span> Interview Booked
+                        </span>
+                        <% if (tutor.interviewDetails && tutor.interviewDetails.scheduledAt) { %>
+                          <div class="small-interview-time">
+                            <%= new Date(tutor.interviewDetails.scheduledAt).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) %>
+                          </div>
+                        <% } %>
+                      <% } else if (tutor.verificationStatus === 'verified') { %>
+                        <span class="status-tag status-verified">
+                          <span class="tag-dot"></span> Verified Live
+                        </span>
+                        <% if (tutor.verifiedAt) { %>
+                          <div class="small-interview-time">On: <%= new Date(tutor.verifiedAt).toLocaleDateString() %></div>
+                        <% } %>
+                      <% } else if (tutor.verificationStatus === 'rejected') { %>
+                        <span class="status-tag status-rejected">
+                          <span class="tag-dot"></span> Rejected
+                        </span>
                       <% } %>
-                    <% } else if (tutor.verificationStatus === 'verified') { %>
-                      <span class="status-tag status-verified">✓ Verified (Live)</span>
-                      <% if (tutor.verifiedAt) { %>
-                        <div class="small-interview-time">On: <%= new Date(tutor.verifiedAt).toLocaleDateString() %></div>
-                      <% } %>
-                    <% } else if (tutor.verificationStatus === 'rejected') { %>
-                      <span class="status-tag status-rejected">❌ Rejected</span>
-                    <% } %>
+                    </div>
                   </td>
 
                   <!-- Actions Col -->
-                  <td>
-                    <div class="action-buttons-group">
-                      <!-- 1. Send Zoom Link Button (Triggers Modal) -->
+                  <td class="col-actions">
+                    <div class="admin-actions-cell">
+                      <!-- 1. Send Zoom Link Button -->
                       <button 
                         type="button" 
-                        class="btn btn-zoom-sm btn-sm open-zoom-modal-btn" 
+                        class="btn btn-zoom-sm btn-sm btn-block open-zoom-modal-btn" 
                         data-tutor-id="<%= tutor._id %>"
                         data-tutor-name="<%= tutor.name %>"
                         data-tutor-email="<%= tutor.email %>"
@@ -197,34 +213,37 @@
 
                       <!-- 2. Verify Tutor Button -->
                       <% if (!tutor.isVerified) { %>
-                        <form action="/admin/tutors/<%= tutor._id %>/verify" method="POST" style="display:inline;" onsubmit="return confirm('Confirm that you have completed the Zoom interview with <%= tutor.name %> and verified their qualifications? Their profile will be published on the front page immediately.');">
-                          <button type="submit" class="btn btn-success-sm btn-sm" title="Mark as Verified after Zoom interview">
+                        <form action="/admin/tutors/<%= tutor._id %>/verify" method="POST" class="actions-form-full" onsubmit="return confirm('Confirm that you have completed the Zoom interview with <%= tutor.name %> and verified their qualifications? Their profile will be published on the front page immediately.');">
+                          <button type="submit" class="btn btn-success-sm btn-sm btn-block" title="Mark as Verified after Zoom interview">
                             ✅ Verify & Publish
                           </button>
                         </form>
                       <% } else { %>
-                        <span class="badge-live-indicator" title="Profile is Live on Homepage">🌐 Live on Front Page</span>
+                        <div class="badge-live-box">
+                          <span class="badge-live-indicator" title="Profile is Live on Homepage">🌐 Live on Front Page</span>
+                        </div>
                       <% } %>
 
-                      <!-- 3. Details Button -->
-                      <a href="/admin/tutors/<%= tutor._id %>" class="btn btn-outline btn-sm" title="View Full Application Details">
-                        👁️ View Details
-                      </a>
+                      <!-- 3. Details + Reject Buttons Row -->
+                      <div class="admin-sub-actions-row">
+                        <a href="/admin/tutors/<%= tutor._id %>" class="btn btn-outline btn-sm action-view-btn" title="View Full Application Details">
+                          👁️ View Details
+                        </a>
 
-                      <!-- 4. Reject / Revert Dropdown / Button -->
-                      <% if (tutor.verificationStatus !== 'rejected') { %>
-                        <form action="/admin/tutors/<%= tutor._id %>/reject" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to reject this tutor?');">
-                          <button type="submit" class="btn btn-ghost-danger btn-sm" title="Reject Application">
-                            ✕
-                          </button>
-                        </form>
-                      <% } else { %>
-                        <form action="/admin/tutors/<%= tutor._id %>/revert-pending" method="POST" style="display:inline;">
-                          <button type="submit" class="btn btn-outline btn-sm">
-                            Revert to Pending
-                          </button>
-                        </form>
-                      <% } %>
+                        <% if (tutor.verificationStatus !== 'rejected') { %>
+                          <form action="/admin/tutors/<%= tutor._id %>/reject" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to reject this tutor?');">
+                            <button type="submit" class="btn btn-ghost-danger btn-sm action-reject-btn" title="Reject Application">
+                              ✕
+                            </button>
+                          </form>
+                        <% } else { %>
+                          <form action="/admin/tutors/<%= tutor._id %>/revert-pending" method="POST" style="display:inline;">
+                            <button type="submit" class="btn btn-outline btn-sm action-revert-btn" title="Revert to Pending">
+                              🔄
+                            </button>
+                          </form>
+                        <% } %>
+                      </div>
                     </div>
                   </td>
                 </tr>

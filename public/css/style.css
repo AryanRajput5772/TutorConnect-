@@ -58,6 +58,12 @@
   padding: 0;
 }
 
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100vw;
+}
+
 body {
   font-family: var(--font-sans);
   background-color: var(--bg-main);
@@ -320,6 +326,8 @@ img {
 }
 .btn-block {
   width: 100%;
+  white-space: normal;
+  text-align: center;
 }
 
 .btn-primary {
@@ -438,14 +446,6 @@ img {
 }
 .glow-button:hover::after {
   transform: rotate(30deg) translate(30%, 30%);
-}
-}
-.btn-success-sm {
-  background-color: #16a34a;
-  color: #fff !important;
-}
-.btn-success-sm:hover {
-  background-color: #15803d;
 }
 
 .btn-ghost-danger {
@@ -796,7 +796,7 @@ img {
 /* TUTOR CARD DESIGN */
 .tutors-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
   gap: 24px;
 }
 .tutor-card {
@@ -1962,54 +1962,309 @@ img {
   gap: 8px;
 }
 
+/* ADMIN DASHBOARD TUTOR LIST TABLE */
+.admin-table {
+  min-width: 1080px;
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+.admin-table th {
+  padding: 14px 16px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  background-color: rgba(248, 250, 252, 0.95);
+  border-bottom: 2px solid rgba(226, 232, 240, 0.9);
+  white-space: nowrap;
+}
+.admin-table td {
+  padding: 16px 16px;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.75);
+  vertical-align: top;
+  background-color: transparent;
+}
+.admin-table tbody tr:hover td {
+  background-color: rgba(241, 245, 249, 0.5);
+}
+
+/* Explicit Column Proportions */
+.admin-table .col-tutor {
+  width: 26%;
+  min-width: 250px;
+}
+.admin-table .col-qual {
+  width: 21%;
+  min-width: 200px;
+}
+.admin-table .col-subjects {
+  width: 22%;
+  min-width: 210px;
+}
+.admin-table .col-fee {
+  width: 10%;
+  min-width: 95px;
+  text-align: center;
+}
+.admin-table .col-status {
+  width: 13%;
+  min-width: 140px;
+  text-align: center;
+}
+.admin-table .col-actions {
+  width: 17%;
+  min-width: 180px;
+}
+
+/* Column 1: Tutor Meta */
 .admin-tutor-cell {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
+  min-width: 0;
+  width: 100%;
 }
 .admin-table-avatar {
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
   border-radius: 50%;
   object-fit: cover;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+  background: #f1f5f9;
+}
+.admin-tutor-meta {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+.admin-tutor-name {
+  display: block;
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--secondary);
+  line-height: 1.3;
+  margin-bottom: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .cell-sub {
-  font-size: 12.5px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin-bottom: 2px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.cell-icon {
+  font-size: 11px;
+  flex-shrink: 0;
+}
+.cell-email {
+  color: #475569;
+  word-break: break-all;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+.cell-phone {
   color: var(--text-muted);
+}
+.cell-date {
+  display: block;
+  font-size: 11px;
+  color: var(--text-light);
+  margin-top: 3px;
+}
+
+/* Column 2: Academic Qualifications */
+.admin-qual-cell {
+  min-width: 0;
+}
+.qual-title {
+  display: block;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--secondary);
+  line-height: 1.35;
+  margin-bottom: 3px;
+  word-break: break-word;
+}
+.qual-college {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.3;
+  margin-bottom: 4px;
 }
 .cell-badge {
   display: inline-block;
   font-size: 11px;
   font-weight: 600;
-  background: #f1f5f9;
-  padding: 2px 6px;
+  background: rgba(241, 245, 249, 0.9);
+  color: var(--text-secondary);
+  padding: 2px 7px;
   border-radius: var(--radius-sm);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+/* Column 3: Subjects & Localities */
+.admin-subjects-list {
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--secondary);
+  word-break: break-word;
+}
+.admin-localities-list {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 3px;
+  word-break: break-word;
+}
+.cell-mode-note {
+  display: block;
+  font-size: 11px;
+  color: var(--text-muted);
   margin-top: 4px;
 }
 
+/* Column 4: Fees */
+.admin-fee-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.fee-main {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--secondary);
+}
+.fee-unit {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+.fee-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* Column 5: Status Tag */
+.status-cell-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
 .status-tag {
-  display: inline-block;
-  font-size: 11.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
   font-weight: 700;
   padding: 4px 10px;
   border-radius: var(--radius-full);
+  white-space: nowrap;
 }
-.status-pending { background: var(--warning-light); color: var(--warning); }
-.status-scheduled { background: var(--info-light); color: var(--info); }
-.status-verified { background: var(--success-light); color: var(--success); }
-.status-rejected { background: var(--danger-light); color: var(--danger); }
-.badge-live-indicator {
+.tag-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
   display: inline-block;
-  font-size: 11.5px;
-  font-weight: 700;
-  color: var(--success);
-  padding: 4px 8px;
+}
+.status-pending { 
+  background: rgba(254, 243, 199, 0.9); 
+  color: var(--warning); 
+  border: 1px solid rgba(252, 211, 77, 0.8); 
+}
+.status-pending .tag-dot { background: var(--warning); }
+
+.status-scheduled { 
+  background: rgba(224, 242, 254, 0.9); 
+  color: var(--info); 
+  border: 1px solid rgba(125, 211, 252, 0.8); 
+}
+.status-scheduled .tag-dot { background: var(--info); }
+
+.status-verified { 
+  background: rgba(220, 252, 231, 0.9); 
+  color: var(--success); 
+  border: 1px solid rgba(134, 239, 172, 0.8); 
+}
+.status-verified .tag-dot { background: var(--success); }
+
+.status-rejected { 
+  background: rgba(254, 226, 226, 0.9); 
+  color: var(--danger); 
+  border: 1px solid rgba(252, 165, 165, 0.8); 
+}
+.status-rejected .tag-dot { background: var(--danger); }
+
+.small-interview-time {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--info);
+  text-align: center;
 }
 
-.action-buttons-group {
+/* Column 6: Admin Actions Block */
+.admin-actions-cell {
   display: flex;
+  flex-direction: column;
   gap: 6px;
-  flex-wrap: wrap;
+  width: 100%;
+}
+.actions-form-full {
+  width: 100%;
+}
+.btn-zoom-sm, .btn-success-sm {
+  padding: 6px 10px;
+  font-size: 12.5px;
+  justify-content: center;
+  font-weight: 600;
+}
+.admin-sub-actions-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+}
+.action-view-btn {
+  flex: 1;
+  padding: 5px 8px;
+  font-size: 12px;
+  justify-content: center;
+}
+.action-reject-btn, .action-revert-btn {
+  width: 30px;
+  height: 29px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+.badge-live-box {
+  width: 100%;
+  text-align: center;
+  padding: 4px 6px;
+}
+.badge-live-indicator {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--success);
+  background: rgba(220, 252, 231, 0.7);
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(134, 239, 172, 0.8);
 }
 
 /* ==========================================================================
@@ -2785,36 +3040,614 @@ img {
 }
 
 @media (max-width: 768px) {
+  /* Global Container & Spacing */
+  .container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  /* Top Announcement Bar */
+  .top-bar {
+    font-size: 11.5px;
+    padding: 6px 0;
+  }
+  .top-bar-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 4px;
+  }
+  .top-bar-left, .top-bar-right {
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Navigation Bar & Mobile Dropdown */
+  .navbar-container {
+    height: 64px;
+  }
+  .brand-logo {
+    font-size: 19px;
+  }
+  .brand-icon {
+    font-size: 22px;
+  }
   .nav-links {
     display: none;
     position: absolute;
-    top: 72px;
+    top: 64px;
     left: 0;
     right: 0;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(20px) saturate(190%);
-    -webkit-backdrop-filter: blur(20px) saturate(190%);
+    background: rgba(255, 255, 255, 0.97);
+    backdrop-filter: blur(24px) saturate(200%);
+    -webkit-backdrop-filter: blur(24px) saturate(200%);
     flex-direction: column;
-    padding: 24px;
-    border-bottom: 1px solid rgba(226, 232, 240, 0.9);
-    box-shadow: 0 16px 36px -6px rgba(15, 23, 42, 0.12);
-    gap: 16px;
+    padding: 20px 18px 26px;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.95);
+    box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.15);
+    gap: 12px;
     z-index: 999;
+    max-height: calc(100vh - 64px);
+    overflow-y: auto;
   }
-  .nav-links.show { display: flex; }
-  .nav-toggle { display: block; }
-  .hero-search-box { flex-direction: column; gap: 12px; }
-  .search-divider { display: none; }
-  .hero-title { font-size: 30px; }
-  .workflow-grid, .testimonials-grid { grid-template-columns: 1fr; }
-  .cta-banner { flex-direction: column; text-align: center; }
-  .cta-buttons { justify-content: center; }
-  .form-row-2 { grid-template-columns: 1fr; }
-  .footer-grid { grid-template-columns: 1fr; }
-  .admin-metrics-grid { grid-template-columns: 1fr; }
+  .nav-links.show {
+    display: flex;
+  }
+  .nav-toggle {
+    display: block;
+  }
+  .nav-link {
+    font-size: 15.5px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(241, 245, 249, 0.9);
+    width: 100%;
+  }
+  .nav-actions {
+    margin-left: 0;
+    margin-top: 6px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(226, 232, 240, 0.9);
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+  }
+  .nav-actions .btn {
+    width: 100%;
+    justify-content: center;
+    padding: 11px 16px;
+    font-size: 14.5px;
+  }
+
+  /* Hero Section */
+  .hero-section {
+    padding: 36px 0 32px;
+  }
+  .hero-badge {
+    font-size: 11.5px;
+    padding: 5px 12px;
+    max-width: 100%;
+    white-space: normal;
+    text-align: center;
+    line-height: 1.35;
+    margin-bottom: 16px;
+  }
+  .hero-title {
+    font-size: 27px;
+    line-height: 1.24;
+    letter-spacing: -0.5px;
+    margin-bottom: 14px;
+    word-break: break-word;
+  }
+  .hero-subtitle {
+    font-size: 14.5px;
+    line-height: 1.5;
+    margin-bottom: 22px;
+  }
+
+  /* Hero Search Box */
+  .hero-search-box {
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px;
+    border-radius: var(--radius-md);
+  }
+  .search-field {
+    width: 100%;
+    padding: 8px 12px;
+    background: rgba(248, 250, 252, 0.9);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    border-radius: var(--radius-sm);
+  }
+  .search-field input, .search-field select {
+    font-size: 14px;
+  }
+  .search-divider {
+    display: none;
+  }
+  .search-submit-btn {
+    width: 100%;
+    padding: 13px;
+    font-size: 15px;
+    justify-content: center;
+  }
+
+  /* Popular Tags */
+  .popular-tags {
+    margin-top: 18px;
+    gap: 6px;
+  }
+  .tags-label {
+    width: 100%;
+    margin-bottom: 4px;
+    font-size: 12px;
+    text-align: center;
+  }
+  .tag-pill {
+    padding: 5px 11px;
+    font-size: 12px;
+  }
+
+  /* Hero Stats Banner (prevents overflow on mobile) */
+  .hero-stats-banner {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 28px;
+    padding-top: 20px;
+  }
+  .stat-card {
+    padding: 14px 8px;
+    min-width: 0;
+  }
+  .stat-number {
+    font-size: 22px;
+    margin-bottom: 4px;
+  }
+  .stat-label {
+    font-size: 11px;
+    line-height: 1.25;
+  }
+
+  /* Section Typography & Spacing */
+  .section {
+    padding: 44px 0;
+  }
+  .section-header {
+    margin-bottom: 26px;
+  }
+  .section-tag {
+    font-size: 11px;
+    padding: 3px 10px;
+  }
+  .section-title {
+    font-size: 24px;
+    line-height: 1.25;
+    letter-spacing: -0.4px;
+    margin-bottom: 8px;
+    word-break: break-word;
+  }
+  .section-subtitle {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .section-header.flex-between {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .section-header.flex-between .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Workflow Grid */
+  .workflow-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .workflow-card {
+    padding: 24px 20px;
+  }
+
+  /* Tutors Grid */
+  .tutors-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  .tutor-card-header {
+    padding: 16px;
+  }
+  .tutor-card-body {
+    padding: 14px 16px;
+  }
+  .tutor-card-footer {
+    padding: 12px 16px;
+  }
+
+  /* Features & Testimonials */
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .feature-card {
+    padding: 22px 18px;
+  }
+  .testimonials-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .testimonial-card {
+    padding: 20px 18px;
+  }
+  .testi-quote {
+    font-size: 13.5px;
+    line-height: 1.55;
+  }
+
+  /* CTA Banner */
+  .cta-banner {
+    flex-direction: column;
+    text-align: center;
+    padding: 28px 18px;
+    gap: 22px;
+  }
+  .cta-content h2 {
+    font-size: 22px;
+    line-height: 1.25;
+  }
+  .cta-content p {
+    font-size: 14px;
+    margin-bottom: 18px;
+  }
+  .cta-buttons {
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+    justify-content: center;
+  }
+  .cta-buttons .btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .cta-badge-card {
+    max-width: 100%;
+    width: 100%;
+    padding: 20px 16px;
+  }
+
+  /* Forms & Auth */
+  .form-row-2 {
+    grid-template-columns: 1fr;
+  }
+  .admin-metrics-grid {
+    grid-template-columns: 1fr;
+  }
+  .auth-card {
+    padding: 24px 18px;
+    border-radius: var(--radius-md);
+  }
+  .auth-container.auth-wide {
+    width: 100%;
+    max-width: 100%;
+  }
+  .auth-header h2 {
+    font-size: 22px;
+    line-height: 1.25;
+  }
+  .auth-header p {
+    font-size: 13.5px;
+  }
+  .auth-submit-row .btn, .btn-block {
+    width: 100%;
+    white-space: normal;
+    text-align: center;
+    font-size: 14.5px;
+    line-height: 1.35;
+    padding: 12px 16px;
+  }
+  .verification-step-indicator {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 12px 14px;
+  }
+  .v-step-line {
+    display: none;
+  }
+  .v-step {
+    font-size: 12.5px;
+    gap: 10px;
+  }
+
+  /* Tutor Photo Upload Responsive */
+  .photo-upload-container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 16px;
+    padding: 18px 14px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .photo-preview-box {
+    margin: 0 auto;
+    width: 84px;
+    height: 84px;
+    min-width: 84px;
+  }
+  .photo-upload-controls {
+    width: 100%;
+    min-width: 0;
+    text-align: center;
+  }
+  .photo-upload-buttons {
+    flex-direction: column;
+    width: 100%;
+    gap: 8px;
+  }
+  .photo-upload-buttons .upload-btn,
+  .photo-upload-buttons button {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+    white-space: normal;
+  }
+  .url-fallback-row {
+    width: 100%;
+    text-align: left;
+    margin-top: 10px;
+  }
+  .url-fallback-row input {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Tutor Dashboard Responsive */
+  .dashboard-header.flex-between {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .dashboard-welcome h1 {
+    font-size: 22px;
+    line-height: 1.25;
+  }
+  .dashboard-welcome p {
+    font-size: 13.5px;
+  }
+  .dashboard-actions {
+    width: 100%;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .dashboard-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .dashboard-card {
+    padding: 20px 16px;
+    border-radius: var(--radius-md);
+  }
+  .dashboard-card-header h3 {
+    font-size: 18px;
+  }
+  .profile-edit-form .btn-primary {
+    width: 100%;
+    justify-content: center;
+    white-space: normal;
+    text-align: center;
+  }
+  .verification-status-card {
+    flex-direction: column;
+    padding: 18px 16px;
+    gap: 14px;
+    border-radius: var(--radius-md);
+  }
+  .status-icon-col .status-icon {
+    font-size: 34px;
+  }
+  .status-content-col h2 {
+    font-size: 18px;
+    line-height: 1.3;
+  }
+  .status-content-col p {
+    font-size: 13.5px;
+  }
+  .zoom-scheduled-box {
+    padding: 14px 12px;
+  }
+  .zoom-box-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .zoom-cta-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .zoom-cta-row .btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .verified-quick-links {
+    flex-direction: column;
+    width: 100%;
+    gap: 8px;
+  }
+  .verified-quick-links .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Public Tutor Profile Responsive */
+  .profile-hero-card {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 18px;
+  }
+  .profile-avatar-container {
+    margin: 0 auto;
+    width: 110px;
+    height: 110px;
+  }
+  .profile-tutor-name {
+    font-size: 24px;
+  }
+  .profile-tutor-degree {
+    font-size: 14px;
+  }
+  .profile-rating-row {
+    flex-wrap: wrap;
+    justify-content: center;
+    font-size: 13px;
+  }
+  .profile-trust-pills {
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .profile-locality-row {
+    font-size: 13px;
+    text-align: center;
+  }
+  .pricing-card-box {
+    padding: 18px 16px;
+  }
+  .profile-layout-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  .detail-box {
+    padding: 18px 14px;
+    border-radius: var(--radius-md);
+  }
+  .box-title {
+    font-size: 17px;
+  }
+
+  /* Footer */
+  .footer {
+    padding: 40px 0 24px;
+    margin-top: 40px;
+  }
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 26px;
+  }
+  .footer-bottom {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+  .footer-bottom-links {
+    justify-content: center;
+  }
 }
 
-/* Tutor Profile Photo Upload Component */
+/* SMARTPHONES (< 520px) */
+@media (max-width: 520px) {
+  .hero-title {
+    font-size: 23px;
+    line-height: 1.24;
+    letter-spacing: -0.3px;
+  }
+  .hero-subtitle {
+    font-size: 13.5px;
+    line-height: 1.48;
+  }
+  
+  /* Stacked hero stat cards for smartphone view */
+  .hero-stats-banner {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    margin-top: 22px;
+    padding-top: 14px;
+  }
+  .stat-card {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 14px;
+    padding: 12px 18px;
+    text-align: left;
+  }
+  .stat-number {
+    font-size: 24px;
+    min-width: 68px;
+    margin-bottom: 0;
+  }
+  .stat-label {
+    font-size: 12px;
+    line-height: 1.35;
+  }
+
+  .section-title {
+    font-size: 20px;
+    line-height: 1.24;
+  }
+  .section-subtitle {
+    font-size: 13.5px;
+  }
+
+  .tutor-avatar {
+    width: 58px;
+    height: 58px;
+  }
+  .tutor-name {
+    font-size: 16px;
+  }
+  .tutor-qualification {
+    font-size: 12px;
+  }
+  .tutor-fee-display .fee-amount {
+    font-size: 16px;
+  }
+  .btn-sm {
+    padding: 8px 14px;
+    font-size: 13px;
+  }
+  
+  .filter-card {
+    padding: 16px;
+  }
+
+  .auth-card {
+    padding: 18px 14px;
+  }
+  .auth-header h2 {
+    font-size: 20px;
+  }
+  .auth-header p {
+    font-size: 13px;
+  }
+  .dashboard-card {
+    padding: 16px 12px;
+  }
+  .dashboard-card-header h3 {
+    font-size: 17px;
+  }
+  .photo-upload-container {
+    padding: 14px 10px;
+  }
+  .photo-preview-box {
+    width: 74px;
+    height: 74px;
+    min-width: 74px;
+  }
+  .profile-main-avatar {
+    width: 100px;
+    height: 100px;
+  }
+  .profile-tutor-name {
+    font-size: 22px;
+  }
+  .btn-lg {
+    font-size: 14px;
+    padding: 11px 14px;
+  }
+}
+
+/* Tutor Profile Photo Upload Component (Base) */
 .photo-upload-container {
   display: flex;
   align-items: center;
@@ -2824,6 +3657,7 @@ img {
   border-radius: var(--radius-md);
   border: 1px dashed #cbd5e1;
   transition: border-color 0.2s, background 0.2s;
+  box-sizing: border-box;
 }
 .photo-upload-container:hover {
   border-color: var(--primary);
@@ -2841,6 +3675,7 @@ img {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 .avatar-preview-img {
   width: 100%;
@@ -2849,6 +3684,8 @@ img {
 }
 .photo-upload-controls {
   flex: 1;
+  min-width: 0;
+  max-width: 100%;
 }
 .photo-upload-buttons {
   display: flex;
@@ -2859,5 +3696,22 @@ img {
 .upload-btn {
   cursor: pointer;
   margin: 0;
+}
+.url-fallback-row {
+  width: 100%;
+}
+.url-fallback-row input {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.auth-submit-row {
+  width: 100%;
+  margin-top: 24px;
+}
+.auth-submit-row .btn {
+  width: 100%;
+  white-space: normal;
+  text-align: center;
 }
 
