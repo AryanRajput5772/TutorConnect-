@@ -40,7 +40,8 @@ router.get('/', async (req, res) => {
     const distinctLocations = await Tutor.distinct('city', { isVerified: true });
 
     res.render('index', {
-      title: 'TutorConnect - Connect with Verified Home Tutors for Your Child',
+      title: 'TutorConnect - Find Trusted Home Tutors Near You',
+      metaDescription: 'TutorConnect helps parents find qualified home tutors for different subjects, classes and locations. Connect with the right tutor for your learning needs.',
       tutors: verifiedTutors,
       totalVerifiedCount,
       subjectCount: distinctSubjects.length,
@@ -56,7 +57,8 @@ router.get('/', async (req, res) => {
     console.error('Error fetching home page tutors:', error);
     req.flash('error_msg', 'Could not load tutors directory');
     res.render('index', {
-      title: 'TutorConnect - Connect with Verified Home Tutors',
+      title: 'TutorConnect - Find Trusted Home Tutors Near You',
+      metaDescription: 'TutorConnect helps parents find qualified home tutors for different subjects, classes and locations. Connect with the right tutor for your learning needs.',
       tutors: [],
       totalVerifiedCount: 0,
       subjectCount: 0,
@@ -105,7 +107,8 @@ router.get('/tutors', async (req, res) => {
     const tutors = await Tutor.find(query).sort(sortOption);
 
     res.render('tutors', {
-      title: 'Find Verified Home Tutors - TutorConnect',
+      title: 'Find Verified Home Tutors Near You - TutorConnect Directory',
+      metaDescription: 'Browse background-verified home tutors by subject, city, class board, and budget. Transparent hourly fees with no agency commissions.',
       tutors,
       filters: {
         subject: subject || '',
@@ -144,7 +147,8 @@ router.get('/tutors/:id', async (req, res) => {
     }).limit(3);
 
     res.render('tutor-detail', {
-      title: `${tutor.name} - Verified Home Tutor | TutorConnect`,
+      title: `${tutor.name} - Verified Home Tutor in ${tutor.city} | TutorConnect`,
+      metaDescription: `Book a home tuition demo session with ${tutor.name}, verified educator in ${tutor.city} teaching ${tutor.subjects.slice(0, 3).join(', ')}.`,
       tutor,
       similarTutors
     });
@@ -201,21 +205,24 @@ router.post('/tutors/:id/inquire', async (req, res) => {
 // GET /how-it-works - Trust & Verification Process Details
 router.get('/how-it-works', (req, res) => {
   res.render('how-it-works', {
-    title: 'How It Works - TutorConnect Safety & Verification'
+    title: 'How It Works - Mandatory Zoom Screening & Safety Protocol | TutorConnect',
+    metaDescription: 'Learn how TutorConnect screens and verifies every home tutor through a 4-stage protocol including live Zoom video interviews and credential checks.'
   });
 });
 
 // GET /about - About Us
 router.get('/about', (req, res) => {
   res.render('about', {
-    title: 'About TutorConnect - Connecting Families with Certified Tutors'
+    title: 'About Us - TutorConnect Safe & Personalized Home Tuition',
+    metaDescription: 'Discover the mission of TutorConnect: providing personalized, trusted 1-on-1 home tuition with 100% video-screened teachers and direct parent communication.'
   });
 });
 
 // GET /contact - Contact Support
 router.get('/contact', (req, res) => {
   res.render('contact', {
-    title: 'Contact Us - TutorConnect'
+    title: 'Contact TutorConnect Support - We Are Here to Assist Parents & Tutors',
+    metaDescription: 'Need help finding a home tutor or scheduling your tutor interview? Contact TutorConnect support via phone, WhatsApp, or email.'
   });
 });
 

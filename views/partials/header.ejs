@@ -3,7 +3,36 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= typeof title !== 'undefined' ? title : 'TutorConnect - Verified Home Tutors' %></title>
+  
+  <!-- SEO Primary Meta Tags -->
+  <title><%= typeof title !== 'undefined' ? title : 'TutorConnect - Find Trusted Home Tutors Near You' %></title>
+  <meta name="title" content="<%= typeof title !== 'undefined' ? title : 'TutorConnect - Find Trusted Home Tutors Near You' %>">
+  <meta name="description" content="<%= typeof metaDescription !== 'undefined' ? metaDescription : 'TutorConnect helps parents find qualified home tutors for different subjects, classes and locations. Connect with the right tutor for your learning needs.' %>">
+  <meta name="keywords" content="<%= typeof metaKeywords !== 'undefined' ? metaKeywords : 'home tutors, online tutors, home tuition, find tutors, private tutors, TutorConnect' %>">
+  
+  <!-- Robots & Search Engine Indexing -->
+  <% if (typeof currentPath !== 'undefined' && (currentPath.startsWith('/admin') || currentPath.startsWith('/tutor/dashboard'))) { %>
+    <meta name="robots" content="noindex, nofollow">
+  <% } else { %>
+    <meta name="robots" content="index, follow">
+  <% } %>
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://tutorconnect.site<%= typeof currentPath !== 'undefined' && currentPath !== '/' ? currentPath : '' %>">
+
+  <!-- Open Graph / Social Sharing -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://tutorconnect.site<%= typeof currentPath !== 'undefined' && currentPath !== '/' ? currentPath : '' %>">
+  <meta property="og:title" content="<%= typeof title !== 'undefined' ? title : 'TutorConnect - Find Trusted Home Tutors Near You' %>">
+  <meta property="og:description" content="<%= typeof metaDescription !== 'undefined' ? metaDescription : 'TutorConnect helps parents find qualified home tutors for different subjects, classes and locations. Connect with the right tutor for your learning needs.' %>">
+  <meta property="og:image" content="https://tutorconnect.site/images/default-avatar.svg">
+
+  <!-- Twitter Meta Tags -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="<%= typeof title !== 'undefined' ? title : 'TutorConnect - Find Trusted Home Tutors Near You' %>">
+  <meta name="twitter:description" content="<%= typeof metaDescription !== 'undefined' ? metaDescription : 'TutorConnect helps parents find qualified home tutors for different subjects, classes and locations. Connect with the right tutor for your learning needs.' %>">
+
+  <!-- Fonts & Stylesheet -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -39,6 +68,7 @@
         <a href="/tutors" class="nav-link <%= currentPath === '/tutors' ? 'active' : '' %>">Find Tutors</a>
         <a href="/how-it-works" class="nav-link <%= currentPath === '/how-it-works' ? 'active' : '' %>">How It Works</a>
         <a href="/about" class="nav-link <%= currentPath === '/about' ? 'active' : '' %>">About</a>
+        <a href="/contact" class="nav-link <%= currentPath === '/contact' ? 'active' : '' %>">Contact</a>
 
         <div class="nav-actions">
           <% if (isAdmin) { %>

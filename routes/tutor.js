@@ -7,7 +7,8 @@ const { isTutorAuth, redirectIfTutorAuth } = require('../middleware/auth');
 // GET /tutor/register
 router.get('/register', redirectIfTutorAuth, (req, res) => {
   res.render('tutor/register', {
-    title: 'Join as a Tutor - TutorConnect',
+    title: 'Apply as a Home Tutor - TutorConnect Educator Registration',
+    metaDescription: 'Register to teach as a verified home tutor on TutorConnect. Get direct tuition requests in your area with flexible hours and 0% commission.',
     formData: {}
   });
 });
