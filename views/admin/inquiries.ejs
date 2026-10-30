@@ -15,8 +15,9 @@
 
     <div class="dashboard-card mt-4">
       <% if (inquiries && inquiries.length > 0) { %>
-        <div class="table-responsive">
-          <table class="data-table">
+        <!-- Desktop Table View -->
+        <div class="table-responsive inquiries-desktop-table">
+          <table class="data-table inquiries-table">
             <thead>
               <tr>
                 <th>Parent Name & Phone</th>
@@ -25,8 +26,8 @@
                 <th>Locality</th>
                 <th>Subjects</th>
                 <th>Timing</th>
-                <th>Notes</th>
-                <th>Status</th>
+                <th class="th-notes">Notes</th>
+                <th class="th-status">Status</th>
                 <th>Date</th>
               </tr>
             </thead>
@@ -52,15 +53,15 @@
                   <td>📍 <%= inq.locality %></td>
                   <td><%= inq.subjectsNeeded.join(', ') || 'Core Subjects' %></td>
                   <td><%= inq.preferredTiming %></td>
-                  <td><small><%= inq.message || '—' %></small></td>
+                  <td class="td-notes"><small class="inq-notes-text"><%= inq.message || '—' %></small></td>
                   <td>
                     <form action="/admin/inquiries/<%= inq._id %>/status" method="POST" class="status-change-form">
-                      <select name="status" class="form-control form-control-sm" onchange="this.form.submit()">
-                        <option value="new" <%= inq.status === 'new' ? 'selected' : '' %>>New</option>
-                        <option value="contacted" <%= inq.status === 'contacted' ? 'selected' : '' %>>Contacted</option>
-                        <option value="demo_scheduled" <%= inq.status === 'demo_scheduled' ? 'selected' : '' %>>Demo Scheduled</option>
-                        <option value="enrolled" <%= inq.status === 'enrolled' ? 'selected' : '' %>>Enrolled</option>
-                        <option value="closed" <%= inq.status === 'closed' ? 'selected' : '' %>>Closed</option>
+                      <select name="status" class="form-control form-control-sm inq-select-status" onchange="this.form.submit()">
+                        <option value="new" <%= inq.status === 'new' ? 'selected' : '' %>>🟡 New</option>
+                        <option value="contacted" <%= inq.status === 'contacted' ? 'selected' : '' %>>📞 Contacted</option>
+                        <option value="demo_scheduled" <%= inq.status === 'demo_scheduled' ? 'selected' : '' %>>📅 Demo Scheduled</option>
+                        <option value="enrolled" <%= inq.status === 'enrolled' ? 'selected' : '' %>>🎉 Enrolled</option>
+                        <option value="closed" <%= inq.status === 'closed' ? 'selected' : '' %>>⚪ Closed</option>
                       </select>
                     </form>
                   </td>
@@ -69,6 +70,92 @@
               <% }) %>
             </tbody>
           </table>
+        </div>
+
+        <!-- Mobile Cards View (Optimized for Smartphone Screens) -->
+        <div class="inquiries-cards-mobile">
+          <% inquiries.forEach(inq => { %>
+            <div class="inquiry-card-mobile inq-status-<%= inq.status %>">
+              <div class="inq-card-top flex-between">
+                <div class="inq-parent-meta">
+                  <span class="inq-avatar-icon">👤</span>
+                  <div>
+                    <h4 class="inq-parent-name"><%= inq.parentName %></h4>
+                    <span class="inq-date">📅 <%= new Date(inq.createdAt).toLocaleDateString() %></span>
+                  </div>
+                </div>
+                <div class="inq-grade-tag">
+                  <span class="badge badge-light"><%= inq.studentGrade %></span>
+                </div>
+              </div>
+
+              <div class="inq-tutor-banner">
+                <span class="inq-meta-label">Requested Tutor:</span>
+                <% if (inq.tutor) { %>
+                  <a href="/admin/tutors/<%= inq.tutor._id %>" class="inq-tutor-pill">
+                    👨‍🏫 <strong><%= inq.tutor.name %></strong> &rarr;
+                  </a>
+                <% } else { %>
+                  <span class="text-muted">Tutor removed</span>
+                <% } %>
+              </div>
+
+              <div class="inq-specs-grid">
+                <div class="inq-spec-item">
+                  <span class="inq-spec-icon">📍</span>
+                  <div class="inq-spec-text">
+                    <small>Locality</small>
+                    <strong><%= inq.locality %></strong>
+                  </div>
+                </div>
+                <div class="inq-spec-item">
+                  <span class="inq-spec-icon">📚</span>
+                  <div class="inq-spec-text">
+                    <small>Subjects</small>
+                    <strong><%= inq.subjectsNeeded.join(', ') || 'Core Subjects' %></strong>
+                  </div>
+                </div>
+                <div class="inq-spec-item inq-spec-full">
+                  <span class="inq-spec-icon">⏱️</span>
+                  <div class="inq-spec-text">
+                    <small>Preferred Timing</small>
+                    <strong><%= inq.preferredTiming %></strong>
+                  </div>
+                </div>
+              </div>
+
+              <% if (inq.message) { %>
+                <div class="inq-notes-box">
+                  <div class="inq-notes-label">💬 Parent's Note:</div>
+                  <p class="inq-notes-body"><%= inq.message %></p>
+                </div>
+              <% } %>
+
+              <div class="inq-contact-action-row">
+                <a href="tel:<%= inq.parentPhone %>" class="btn btn-outline btn-sm inq-phone-btn">
+                  📞 Call <%= inq.parentPhone %>
+                </a>
+                <% if (inq.parentEmail) { %>
+                  <a href="mailto:<%= inq.parentEmail %>" class="btn btn-ghost btn-sm inq-email-btn" title="<%= inq.parentEmail %>">
+                    ✉️ Email
+                  </a>
+                <% } %>
+              </div>
+
+              <div class="inq-card-footer">
+                <label class="inq-footer-label">Status:</label>
+                <form action="/admin/inquiries/<%= inq._id %>/status" method="POST" class="inq-mobile-status-form">
+                  <select name="status" class="form-control form-control-sm inq-mobile-select" onchange="this.form.submit()">
+                    <option value="new" <%= inq.status === 'new' ? 'selected' : '' %>>🟡 New Inquiry</option>
+                    <option value="contacted" <%= inq.status === 'contacted' ? 'selected' : '' %>>📞 Contacted</option>
+                    <option value="demo_scheduled" <%= inq.status === 'demo_scheduled' ? 'selected' : '' %>>📅 Demo Scheduled</option>
+                    <option value="enrolled" <%= inq.status === 'enrolled' ? 'selected' : '' %>>🎉 Enrolled</option>
+                    <option value="closed" <%= inq.status === 'closed' ? 'selected' : '' %>>⚪ Closed</option>
+                  </select>
+                </form>
+              </div>
+            </div>
+          <% }) %>
         </div>
       <% } else { %>
         <div class="empty-state">

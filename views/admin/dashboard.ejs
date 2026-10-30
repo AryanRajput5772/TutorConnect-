@@ -202,7 +202,7 @@
                       <!-- 1. Send Zoom Link Button -->
                       <button 
                         type="button" 
-                        class="btn btn-zoom-sm btn-sm btn-block open-zoom-modal-btn" 
+                        class="btn btn-zoom-sm btn-sm open-zoom-modal-btn" 
                         data-tutor-id="<%= tutor._id %>"
                         data-tutor-name="<%= tutor.name %>"
                         data-tutor-email="<%= tutor.email %>"
@@ -214,7 +214,7 @@
                       <!-- 2. Verify Tutor Button -->
                       <% if (!tutor.isVerified) { %>
                         <form action="/admin/tutors/<%= tutor._id %>/verify" method="POST" class="actions-form-full" onsubmit="return confirm('Confirm that you have completed the Zoom interview with <%= tutor.name %> and verified their qualifications? Their profile will be published on the front page immediately.');">
-                          <button type="submit" class="btn btn-success-sm btn-sm btn-block" title="Mark as Verified after Zoom interview">
+                          <button type="submit" class="btn btn-success-sm btn-sm" title="Mark as Verified after Zoom interview">
                             ✅ Verify & Publish
                           </button>
                         </form>
@@ -231,13 +231,13 @@
                         </a>
 
                         <% if (tutor.verificationStatus !== 'rejected') { %>
-                          <form action="/admin/tutors/<%= tutor._id %>/reject" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to reject this tutor?');">
+                          <form action="/admin/tutors/<%= tutor._id %>/reject" method="POST" class="action-reject-form" onsubmit="return confirm('Are you sure you want to reject this tutor?');">
                             <button type="submit" class="btn btn-ghost-danger btn-sm action-reject-btn" title="Reject Application">
                               ✕
                             </button>
                           </form>
                         <% } else { %>
-                          <form action="/admin/tutors/<%= tutor._id %>/revert-pending" method="POST" style="display:inline;">
+                          <form action="/admin/tutors/<%= tutor._id %>/revert-pending" method="POST" class="action-revert-form">
                             <button type="submit" class="btn btn-outline btn-sm action-revert-btn" title="Revert to Pending">
                               🔄
                             </button>
