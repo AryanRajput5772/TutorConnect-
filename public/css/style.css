@@ -4026,12 +4026,21 @@ html:not([data-theme="dark"]):not([data-theme="black"]) .theme-icon-sun {
   .search-field {
     width: 100%;
     padding: 8px 12px;
-    background: rgba(248, 250, 252, 0.9);
-    border: 1px solid rgba(226, 232, 240, 0.9);
+    background: rgba(248, 250, 252, 0.95);
+    border: 1px solid rgba(226, 232, 240, 0.95);
     border-radius: var(--radius-sm);
   }
-  .search-field input, .search-field select {
-    font-size: 14px;
+  .search-field input,
+  .search-field input[type="text"],
+  .search-field select {
+    font-size: 14.5px !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    padding: 4px 0 !important;
+    width: 100% !important;
   }
   .search-divider {
     display: none;
@@ -5187,9 +5196,29 @@ html:not([data-theme="dark"]):not([data-theme="black"]) .theme-icon-sun {
   color: #94a3b8 !important;
 }
 [data-theme="dark"] .search-field input,
+[data-theme="dark"] .search-field input[type="text"],
 [data-theme="dark"] .search-field select {
   color: #f8fafc !important;
   background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+[data-theme="dark"] .search-field select option {
+  background-color: #0b1120 !important;
+  color: #ffffff !important;
+}
+@media (max-width: 768px) {
+  [data-theme="dark"] .search-field {
+    background: rgba(18, 26, 44, 0.85) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-radius: var(--radius-sm) !important;
+  }
+  [data-theme="dark"] .search-field:focus-within {
+    background: rgba(24, 34, 60, 0.95) !important;
+    border-color: rgba(96, 165, 250, 0.5) !important;
+  }
 }
 [data-theme="dark"] .search-divider {
   background-color: rgba(255, 255, 255, 0.12) !important;
@@ -6372,9 +6401,29 @@ html:not([data-theme="dark"]):not([data-theme="black"]) .theme-icon-sun {
   color: #9ca3af !important;
 }
 [data-theme="black"] .search-field input,
+[data-theme="black"] .search-field input[type="text"],
 [data-theme="black"] .search-field select {
   color: #ffffff !important;
   background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+[data-theme="black"] .search-field select option {
+  background-color: #0c0c0c !important;
+  color: #ffffff !important;
+}
+@media (max-width: 768px) {
+  [data-theme="black"] .search-field {
+    background: rgba(20, 20, 20, 0.9) !important;
+    border: 1px solid rgba(255, 255, 255, 0.14) !important;
+    border-radius: var(--radius-sm) !important;
+  }
+  [data-theme="black"] .search-field:focus-within {
+    background: rgba(28, 28, 28, 0.98) !important;
+    border-color: rgba(255, 255, 255, 0.45) !important;
+  }
 }
 [data-theme="black"] .search-divider {
   background-color: rgba(255, 255, 255, 0.12) !important;
