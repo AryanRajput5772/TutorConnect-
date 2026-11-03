@@ -1,6 +1,76 @@
 // TutorConnect Client JavaScript
 
 document.addEventListener('DOMContentLoaded', () => {
+  // 0. Multi-Theme Switcher (Light / Midnight Blue / All-Black OLED)
+  const themeToggle = document.getElementById('themeToggle');
+  const themeSwitcherWrapper = document.getElementById('themeSwitcherWrapper');
+  const themeDropdownMenu = document.getElementById('themeDropdownMenu');
+  const themeOptions = document.querySelectorAll('.theme-option-item');
+
+  const updateActiveOptionUI = (currentTheme) => {
+    themeOptions.forEach(opt => {
+      if (opt.getAttribute('data-theme-val') === currentTheme) {
+        opt.classList.add('active');
+      } else {
+        opt.classList.remove('active');
+      }
+    });
+  };
+
+  const applyTheme = (themeName) => {
+    document.documentElement.setAttribute('data-theme', themeName);
+    try {
+      localStorage.setItem('tutorconnect_theme', themeName);
+    } catch (err) {}
+    updateActiveOptionUI(themeName);
+  };
+
+  // Initial state check
+  const activeInitialTheme = document.documentElement.getAttribute('data-theme') || 'light';
+  updateActiveOptionUI(activeInitialTheme);
+
+  if (themeToggle && themeDropdownMenu) {
+    // Click toggle button: cycle through Light -> Midnight Blue -> All-Black -> Light
+    themeToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const current = document.documentElement.getAttribute('data-theme') || 'light';
+      let nextTheme = 'dark';
+      if (current === 'light') {
+        nextTheme = 'dark'; // Midnight Blue
+      } else if (current === 'dark') {
+        nextTheme = 'black'; // Pure All-Black Glass
+      } else {
+        nextTheme = 'light';
+      }
+      applyTheme(nextTheme);
+    });
+
+    // Right-click or long-press / hover support for menu dropdown
+    themeToggle.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      themeDropdownMenu.classList.toggle('show');
+    });
+
+    // Clicking an option in dropdown
+    themeOptions.forEach(opt => {
+      opt.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const selected = opt.getAttribute('data-theme-val');
+        if (selected) {
+          applyTheme(selected);
+          themeDropdownMenu.classList.remove('show');
+        }
+      });
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (themeSwitcherWrapper && !themeSwitcherWrapper.contains(e.target)) {
+        themeDropdownMenu.classList.remove('show');
+      }
+    });
+  }
+
   // 1. Mobile Menu Toggle
   const navToggle = document.getElementById('navToggle');
   const navMenu = document.getElementById('navMenu');
