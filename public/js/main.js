@@ -30,24 +30,39 @@ document.addEventListener('DOMContentLoaded', () => {
   updateActiveOptionUI(activeInitialTheme);
 
   if (themeToggle && themeDropdownMenu) {
-    // Click toggle button: cycle through Light -> Midnight Blue -> All-Black -> Light
+    let hideTimer = null;
+
+    const openDropdown = () => {
+      clearTimeout(hideTimer);
+      themeDropdownMenu.classList.add('show');
+    };
+
+    const closeDropdown = (delay = 250) => {
+      clearTimeout(hideTimer);
+      hideTimer = setTimeout(() => {
+        themeDropdownMenu.classList.remove('show');
+      }, delay);
+    };
+
+    // Hover support with generous grace period so moving cursor to menu never vanishes
+    if (themeSwitcherWrapper) {
+      themeSwitcherWrapper.addEventListener('mouseenter', openDropdown);
+      themeSwitcherWrapper.addEventListener('mouseleave', () => closeDropdown(250));
+    }
+    themeDropdownMenu.addEventListener('mouseenter', openDropdown);
+    themeDropdownMenu.addEventListener('mouseleave', () => closeDropdown(200));
+
+    // Clicking toggle button toggles menu open/closed
     themeToggle.addEventListener('click', (e) => {
       e.stopPropagation();
-      const current = document.documentElement.getAttribute('data-theme') || 'light';
-      let nextTheme = 'dark';
-      if (current === 'light') {
-        nextTheme = 'dark'; // Midnight Blue
-      } else if (current === 'dark') {
-        nextTheme = 'black'; // Pure All-Black Glass
-      } else {
-        nextTheme = 'light';
-      }
-      applyTheme(nextTheme);
+      clearTimeout(hideTimer);
+      themeDropdownMenu.classList.toggle('show');
     });
 
-    // Right-click or long-press / hover support for menu dropdown
+    // Right-click or context menu
     themeToggle.addEventListener('contextmenu', (e) => {
       e.preventDefault();
+      clearTimeout(hideTimer);
       themeDropdownMenu.classList.toggle('show');
     });
 
@@ -55,6 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
     themeOptions.forEach(opt => {
       opt.addEventListener('click', (e) => {
         e.stopPropagation();
+        clearTimeout(hideTimer);
         const selected = opt.getAttribute('data-theme-val');
         if (selected) {
           applyTheme(selected);
@@ -66,6 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Close menu when clicking outside
     document.addEventListener('click', (e) => {
       if (themeSwitcherWrapper && !themeSwitcherWrapper.contains(e.target)) {
+        clearTimeout(hideTimer);
         themeDropdownMenu.classList.remove('show');
       }
     });
