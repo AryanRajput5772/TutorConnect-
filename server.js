@@ -56,7 +56,7 @@ const sessionConfig = {
 
 if (process.env.MONGODB_URI) {
   sessionConfig.store = MongoStore.create({
-    mongoUrl: process.env.MONGODB_URI,
+    clientPromise: connectDB().then(conn => conn.getClient()),
     collectionName: 'sessions',
     ttl: 14 * 24 * 60 * 60 // 14 days
   });
