@@ -118,6 +118,7 @@ router.post('/register', redirectIfTutorAuth, async (req, res) => {
     req.session.tutorId = newTutor._id;
     req.session.tutorName = newTutor.name;
     req.session.isTutor = true;
+    req.session.loginTime = Date.now();
 
     req.flash(
       'success_msg',
@@ -136,6 +137,9 @@ router.post('/register', redirectIfTutorAuth, async (req, res) => {
 
 // GET /tutor/login
 router.get('/login', redirectIfTutorAuth, (req, res) => {
+  if (req.query.expired) {
+    req.flash('error_msg', 'Your session has expired after 24 hours. Please log in again.');
+  }
   res.render('tutor/login', {
     title: 'Tutor Login - TutorConnect'
   });
@@ -167,6 +171,7 @@ router.post('/login', redirectIfTutorAuth, async (req, res) => {
     req.session.tutorId = tutor._id;
     req.session.tutorName = tutor.name;
     req.session.isTutor = true;
+    req.session.loginTime = Date.now();
 
     req.flash('success_msg', `Welcome back, ${tutor.name}!`);
     res.redirect('/tutor/dashboard');

@@ -44,13 +44,16 @@ app.use(async (req, res, next) => {
   }
 });
 
-// Express Session with MongoStore for serverless persistent logins
+// Express Session with MongoStore for serverless persistent logins (24-Hour Expiration)
 const sessionConfig = {
   secret: process.env.SESSION_SECRET || 'tutorconnect_super_secret_key_2026',
   resave: false,
   saveUninitialized: false,
   cookie: {
-    maxAge: 1000 * 60 * 60 * 24 * 7 // 7 days
+    maxAge: 1000 * 60 * 60 * 24, // 24 hours
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production'
   }
 };
 
@@ -58,11 +61,29 @@ if (process.env.MONGODB_URI) {
   sessionConfig.store = MongoStore.create({
     clientPromise: connectDB().then(conn => conn.getClient()),
     collectionName: 'sessions',
-    ttl: 14 * 24 * 60 * 60 // 14 days
+    ttl: 24 * 60 * 60 // 24 hours
   });
 }
 
 app.use(session(sessionConfig));
+
+// Absolute 24-hour session expiration enforcement
+const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
+app.use((req, res, next) => {
+  if (req.session && (req.session.tutorId || req.session.adminId)) {
+    if (!req.session.loginTime) {
+      req.session.loginTime = Date.now();
+    } else if (Date.now() - req.session.loginTime > TWENTY_FOUR_HOURS) {
+      const wasAdmin = !!req.session.adminId;
+      return req.session.destroy(() => {
+        res.clearCookie('connect.sid');
+        const redirectUrl = wasAdmin ? '/admin/login?expired=1' : '/tutor/login?expired=1';
+        return res.redirect(redirectUrl);
+      });
+    }
+  }
+  next();
+});
 
 // Connect Flash
 app.use(flash());

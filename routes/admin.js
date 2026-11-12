@@ -8,6 +8,9 @@ const { sendZoomInterviewEmail, sendProfileVerifiedEmail } = require('../utils/m
 
 // GET /admin/login
 router.get('/login', redirectIfAdminAuth, (req, res) => {
+  if (req.query.expired) {
+    req.flash('error_msg', 'Your session has expired after 24 hours. Please log in again.');
+  }
   res.render('admin/login', {
     title: 'Admin Portal Login - TutorConnect'
   });
@@ -47,6 +50,7 @@ router.post('/login', redirectIfAdminAuth, async (req, res) => {
     req.session.adminName = admin.name;
     req.session.adminEmail = admin.email;
     req.session.isAdmin = true;
+    req.session.loginTime = Date.now();
 
     req.flash('success_msg', `Welcome back, ${admin.name}!`);
     res.redirect('/admin/dashboard');
