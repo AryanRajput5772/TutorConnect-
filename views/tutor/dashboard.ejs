@@ -8,7 +8,7 @@
         <h1>Welcome, <%= tutor.name %>!</h1>
         <p>Manage your tutor profile, check your Zoom interview status, and view student inquiries.</p>
       </div>
-      <div class="dashboard-actions">
+      <div class="dashboard-actions"style="gap: 10px; display:flex;">
         <% if (tutor.isVerified) { %>
           <a href="/tutors/<%= tutor._id %>" class="btn btn-outline" target="_blank">
             👁️ View My Live Public Profile

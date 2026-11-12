@@ -168,4 +168,20 @@
   </div>
 </div>
 
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var tableWrap = document.querySelector('.inquiries-desktop-table');
+    if (tableWrap) {
+      tableWrap.addEventListener('wheel', function(e) {
+        if (tableWrap.scrollWidth > tableWrap.clientWidth) {
+          if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+            e.preventDefault();
+            tableWrap.scrollLeft += e.deltaY;
+          }
+        }
+      }, { passive: false });
+    }
+  });
+</script>
+
 <%- include('../partials/footer') %>
