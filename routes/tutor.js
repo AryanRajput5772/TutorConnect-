@@ -124,7 +124,10 @@ router.post('/register', redirectIfTutorAuth, async (req, res) => {
       'success_msg',
       '🎉 Registration successful! Your profile has been sent to the Admin Dashboard for verification. You will receive a Zoom interview link via email shortly.'
     );
-    res.redirect('/tutor/dashboard');
+    req.session.save((err) => {
+      if (err) console.error('Error saving tutor session on registration:', err);
+      res.redirect('/tutor/dashboard');
+    });
   } catch (error) {
     console.error('Error in tutor registration:', error);
     req.flash('error_msg', 'Something went wrong during registration: ' + error.message);
@@ -174,7 +177,10 @@ router.post('/login', redirectIfTutorAuth, async (req, res) => {
     req.session.loginTime = Date.now();
 
     req.flash('success_msg', `Welcome back, ${tutor.name}!`);
-    res.redirect('/tutor/dashboard');
+    req.session.save((err) => {
+      if (err) console.error('Error saving tutor session on login:', err);
+      res.redirect('/tutor/dashboard');
+    });
   } catch (error) {
     console.error('Error in tutor login:', error);
     req.flash('error_msg', 'Login failed: ' + error.message);
@@ -273,6 +279,7 @@ router.post('/profile/update', isTutorAuth, async (req, res) => {
 router.get('/logout', (req, res) => {
   req.session.destroy(err => {
     if (err) console.error('Session destroy error:', err);
+    res.clearCookie('connect.sid');
     res.redirect('/tutor/login');
   });
 });

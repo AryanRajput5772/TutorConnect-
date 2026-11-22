@@ -11,6 +11,9 @@ const connectDB = require('./config/db');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Trust reverse proxy (essential for Vercel and serverless platforms to enable secure cookies over HTTPS)
+app.set('trust proxy', 1);
+
 // Connect to MongoDB
 connectDB().catch(err => console.error('Initial DB connection attempt failed:', err.message));
 
@@ -49,6 +52,7 @@ const sessionConfig = {
   secret: process.env.SESSION_SECRET || 'tutorconnect_super_secret_key_2026',
   resave: false,
   saveUninitialized: false,
+  proxy: true, // Trust reverse proxy for secure cookies
   cookie: {
     maxAge: 1000 * 60 * 60 * 24, // 24 hours
     httpOnly: true,
@@ -59,9 +63,10 @@ const sessionConfig = {
 
 if (process.env.MONGODB_URI) {
   sessionConfig.store = MongoStore.create({
-    clientPromise: connectDB().then(conn => conn.getClient()),
+    mongoUrl: process.env.MONGODB_URI,
     collectionName: 'sessions',
-    ttl: 24 * 60 * 60 // 24 hours
+    ttl: 24 * 60 * 60, // 24 hours
+    autoRemove: 'native'
   });
 }
 

@@ -53,7 +53,10 @@ router.post('/login', redirectIfAdminAuth, async (req, res) => {
     req.session.loginTime = Date.now();
 
     req.flash('success_msg', `Welcome back, ${admin.name}!`);
-    res.redirect('/admin/dashboard');
+    req.session.save((err) => {
+      if (err) console.error('Error saving admin session on login:', err);
+      res.redirect('/admin/dashboard');
+    });
   } catch (error) {
     console.error('Error in admin login:', error);
     req.flash('error_msg', 'Login error: ' + error.message);
@@ -318,6 +321,7 @@ router.post(['/inquiries/:id/status', '/admin/inquiries/:id/status'], isAdminAut
 router.get('/logout', (req, res) => {
   req.session.destroy(err => {
     if (err) console.error('Admin logout session error:', err);
+    res.clearCookie('connect.sid');
     res.redirect('/admin/login');
   });
 });
